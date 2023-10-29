@@ -628,22 +628,24 @@ object GraphQLActionBuilder {
         val fields: MutableList<Gene> = mutableListOf()
         val selectionInArgs = state.argsTablesIndexedByName[element.typeName] ?: listOf()
         for (element in selectionInArgs) {
-            if (element.kindOfFieldType.lowercase() == GqlConst.SCALAR) {
-                val copy = element.copy(
-                    fieldType = element.typeName,
-                    KindOfFieldName = element.fieldType,
-                    typeName = element.fieldName
-                )
-
+            if (element.KindOfFieldName.lowercase() == GqlConst.LIST) {
+                val copy = copyTableElement(element, element)
                 val template = getInputGene(state, history, maxTreeDepth, copy)
-                fields.add(template)
-            } else
-                if (element.KindOfFieldName.lowercase() == GqlConst.LIST) {
-                    val copy = copyTableElement(element, element)
-                    val template = getInputGene(state, history, maxTreeDepth, copy)
 
+                fields.add(template)
+            }
+            else
+                if (element.kindOfFieldType.lowercase() == GqlConst.SCALAR) {
+                    val copy = element.copy(
+                        fieldType = element.typeName,
+                        KindOfFieldName = element.fieldType,
+                        typeName = element.fieldName
+                    )
+
+                    val template = getInputGene(state, history, maxTreeDepth, copy)
                     fields.add(template)
-                } else
+                }
+                else
                     if (element.kindOfFieldType.lowercase() == GqlConst.INPUT_OBJECT) {
                         val copy = copyTableElement(element, element)
                         val template = getInputGene(state, history, maxTreeDepth, copy)
