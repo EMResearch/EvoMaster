@@ -166,7 +166,7 @@ abstract class Individual(override var trackOperator: TrackOperator? = null,
         throw IllegalStateException("${this::class.java.simpleName}: copyContent() IS NOT IMPLEMENTED")
     }
 
-    enum class GeneFilter { ALL, NO_SQL, ONLY_SQL, ONLY_MONGO, ONLY_EXTERNAL_SERVICE }
+    enum class GeneFilter { ALL, NO_SQL, ONLY_SQL, ONLY_MONGO, ONLY_EXTERNAL_SERVICE, NO_DB, ONLY_DB }
 
     /**
      * Return a view of all the Genes in this chromosome/individual
@@ -240,7 +240,7 @@ abstract class Individual(override var trackOperator: TrackOperator? = null,
      * calls toward the SUT.
      * A test does not require to have initializing actions.
      */
-    fun seeInitializingActions(): List<Action> = seeActions(ActionFilter.INIT)
+    fun seeInitializingActions(): List<EnvironmentAction> = seeActions(ActionFilter.INIT) as List<EnvironmentAction>
 
 
 

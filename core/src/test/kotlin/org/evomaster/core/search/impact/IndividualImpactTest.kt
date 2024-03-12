@@ -4,6 +4,7 @@ import org.evomaster.core.TestUtils
 import org.evomaster.core.problem.enterprise.SampleType
 import org.evomaster.core.problem.rest.RestIndividual
 import org.evomaster.core.search.impact.impactinfocollection.ImpactsOfIndividual
+import org.evomaster.core.sql.SqlAction
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -29,7 +30,7 @@ class IndividualImpactTest {
 
         val ind = generateFkIndividual()
 
-        val impactInfo = ImpactsOfIndividual(ind, false, null)
+        val impactInfo = ImpactsOfIndividual(ind, listOf(SqlAction::class.java.name),false, null)
 
         impactInfo.fixedMainActionImpacts.apply {
             assertEquals(2, size)

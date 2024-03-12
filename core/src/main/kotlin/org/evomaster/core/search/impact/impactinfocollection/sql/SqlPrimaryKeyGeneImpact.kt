@@ -47,9 +47,9 @@ class SqlPrimaryKeyGeneImpact (sharedImpactInfo: SharedImpactInfo, specificImpac
             throw IllegalStateException("gc.previous (${gc.previous::class.java.simpleName}) should be SqlPrimaryKeyGene")
 
         val mutatedGeneWithContext = MutatedGeneWithContext(
-                previous = if (gc.previous==null) null else (gc.previous as SqlPrimaryKeyGene).gene,
-                current = gc.current.gene,
-                numOfMutatedGene = gc.numOfMutatedGene
+            current = gc.current.gene,
+            previous = if (gc.previous==null) null else (gc.previous as SqlPrimaryKeyGene).gene,
+            numOfMutatedGene = gc.numOfMutatedGene,
         )
         geneImpact.countImpactWithMutatedGeneWithContext(
                 mutatedGeneWithContext,

@@ -58,7 +58,7 @@ class TraceableElementTest {
         val inds10 = (0 until 10).map { sampler.sample()}
         assert(inds10.all { it.trackOperator == null })
 
-        val evalInds10 = inds10.map { ff.calculateCoverage(it)!! }
+        val evalInds10 = inds10.map { ff.calculateCoverage(it, modifiedSpec = null)!! }
         assert(evalInds10.all { it.trackOperator == null && it.tracking == null })
     }
 
@@ -76,7 +76,7 @@ class TraceableElementTest {
         config.seed = 42
         config.useTimeInFeedbackSampling = false
 
-        val inds10 = (0 until 10).map { ff.calculateCoverage(sampler.sample())!!.also { archive.addIfNeeded(it) }}
+        val inds10 = (0 until 10).map { ff.calculateCoverage(sampler.sample(), modifiedSpec = null)!!.also { archive.addIfNeeded(it) }}
         assert(inds10.all { it.trackOperator != null })
 
 
@@ -122,7 +122,7 @@ class TraceableElementTest {
 
         tracker.postConstruct()
 
-        val inds10 = (0 until 10).map { ff.calculateCoverage(sampler.sample())!!.also { archive.addIfNeeded(it) } }
+        val inds10 = (0 until 10).map { ff.calculateCoverage(sampler.sample(), modifiedSpec = null)!!.also { archive.addIfNeeded(it) } }
 
         assert(inds10.all { it.trackOperator != null && it.tracking == null})
 

@@ -52,7 +52,7 @@ class ArrayGeneImpactTest : GeneImpactTest(){
                 }
             }
         }
-        return MutatedGeneWithContext(current = geneToMutate, previous = original)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     @Test

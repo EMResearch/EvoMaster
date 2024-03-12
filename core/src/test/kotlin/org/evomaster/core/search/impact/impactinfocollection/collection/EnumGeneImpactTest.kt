@@ -27,7 +27,7 @@ class EnumGeneImpactTest : GeneImpactTest(){
         geneToMutate as EnumGene<Int>
 
         geneToMutate.index = (geneToMutate.index + 1)%items.size
-        return MutatedGeneWithContext(current = geneToMutate, previous = original)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
 

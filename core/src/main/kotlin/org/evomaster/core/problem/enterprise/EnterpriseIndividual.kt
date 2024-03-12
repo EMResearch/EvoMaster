@@ -181,6 +181,8 @@ abstract class EnterpriseIndividual(
             ActionFilter.ONLY_SQL -> seeAllActions().filterIsInstance<SqlAction>()
             ActionFilter.ONLY_MONGO -> seeAllActions().filterIsInstance<MongoDbAction>()
             ActionFilter.NO_SQL -> seeAllActions().filter { it !is SqlAction }
+            ActionFilter.ONLY_DB -> seeAllActions().filter { it is SqlAction || it is MongoDbAction }
+            ActionFilter.NO_DB -> seeAllActions().filter { it !is SqlAction && it !is MongoDbAction }
             ActionFilter.ONLY_EXTERNAL_SERVICE -> seeAllActions().filterIsInstance<ApiExternalServiceAction>()
             ActionFilter.NO_EXTERNAL_SERVICE -> seeAllActions().filter { it !is ApiExternalServiceAction }.filter { it !is HostnameResolutionAction }
             ActionFilter.ONLY_DNS -> groupsView()!!.getAllInGroup(GroupsOfChildren.INITIALIZATION_DNS).flatMap { (it as ActionComponent).flatten()}
@@ -234,7 +236,7 @@ abstract class EnterpriseIndividual(
      * NOTE THAT if EMConfig.probOfApplySQLActionToCreateResources is 0.0, this method
      * would be same with [seeInitializingActions]
      */
-    fun seeDbActions() : List<SqlAction> = seeActions(ActionFilter.ONLY_SQL) as List<SqlAction>
+    fun seeSqlDbActions() : List<SqlAction> = seeActions(ActionFilter.ONLY_SQL) as List<SqlAction>
 
     fun seeMongoDbActions() : List<MongoDbAction> = seeActions(ActionFilter.ONLY_MONGO) as List<MongoDbAction>
 

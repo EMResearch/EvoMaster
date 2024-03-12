@@ -55,7 +55,7 @@ public class ResourceDbMIOAndHypermutationBasicTest extends ResourceMIOHWTestBas
 
         RestIndividual twoCalls = new RestIndividual(calls, SampleType.SMART_RESOURCE, null, Collections.emptyList(), null, 1);
         twoCalls.doInitializeLocalId();
-        EvaluatedIndividual<RestIndividual> twoCallsEval = ff.calculateCoverage(twoCalls, Collections.emptySet());
+        EvaluatedIndividual<RestIndividual> twoCallsEval = ff.calculateCoverage(twoCalls, Collections.emptySet(), null);
         assertEquals(4, mutator.genesToMutation(twoCalls, twoCallsEval, Collections.emptySet()).stream().filter(s-> !BindingBuilder.INSTANCE.isExtraTaintParam(s.getName())).count());
 
         MutatedGeneSpecification spec = new MutatedGeneSpecification();
@@ -146,7 +146,7 @@ public class ResourceDbMIOAndHypermutationBasicTest extends ResourceMIOHWTestBas
         //test binding after value mutator
         RestIndividual raIdInd = new RestIndividual(calls, SampleType.SMART_RESOURCE, null, Collections.emptyList(), null, 1);
         raIdInd.doInitializeLocalId();
-        EvaluatedIndividual<RestIndividual> rdIdEval = ff.calculateCoverage(raIdInd, Collections.emptySet());
+        EvaluatedIndividual<RestIndividual> rdIdEval = ff.calculateCoverage(raIdInd, Collections.emptySet(), null);
         // mutable genes should be 0+1+2+1=4
         assertEquals(4, mutator.genesToMutation(raIdInd, rdIdEval, Collections.emptySet()).stream().filter(s-> !BindingBuilder.INSTANCE.isExtraTaintParam(s.getName())).count());
 

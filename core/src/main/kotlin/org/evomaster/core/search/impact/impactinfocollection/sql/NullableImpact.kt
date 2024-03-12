@@ -56,9 +56,9 @@ class NullableImpact(sharedImpactInfo: SharedImpactInfo, specificImpactInfo: Spe
 
         if (gc.current.isActive){
             val mutatedGeneWithContext = MutatedGeneWithContext(
-                    previous = if (gc.previous == null) null else (gc.previous as NullableGene).gene,
-                    current = gc.current.gene,
-                    numOfMutatedGene = gc.numOfMutatedGene
+                current = gc.current.gene,
+                previous = if (gc.previous == null) null else (gc.previous as NullableGene).gene,
+                numOfMutatedGene = gc.numOfMutatedGene,
             )
             geneImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets= noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
         }

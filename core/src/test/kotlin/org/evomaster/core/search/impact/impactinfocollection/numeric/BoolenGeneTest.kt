@@ -19,7 +19,7 @@ class BoolenGeneTest : GeneImpactTest() {
 
         geneToMutate.value = !geneToMutate.value
 
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     override fun getGene(): Gene = BooleanGene("i",  value= false)

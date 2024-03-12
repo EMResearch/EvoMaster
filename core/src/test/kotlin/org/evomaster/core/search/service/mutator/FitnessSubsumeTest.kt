@@ -46,7 +46,10 @@ class FitnessSubsumeTest {
         val mutated = current.copy() as OneMaxIndividual
         mutated.setValue(0, 0.0)
 
-        assert(ff.calculateCoverage(current)!!.fitness.subsumes(ff.calculateCoverage(mutated)!!.fitness, (0 until n).toSet(),config))
+        assert(ff.calculateCoverage(current, modifiedSpec = null)!!.fitness.subsumes(ff.calculateCoverage(
+            mutated,
+            modifiedSpec = null
+        )!!.fitness, (0 until n).toSet(),config))
     }
 
     @Test
@@ -61,7 +64,10 @@ class FitnessSubsumeTest {
         val mutated = current.copy() as OneMaxIndividual
         mutated.setValue(0, 0.5)
 
-        assert(ff.calculateCoverage(current)!!.fitness.subsumes(ff.calculateCoverage(mutated)!!.fitness, (0 until n).toSet(),config))
+        assert(ff.calculateCoverage(current, modifiedSpec = null)!!.fitness.subsumes(ff.calculateCoverage(
+            mutated,
+            modifiedSpec = null
+        )!!.fitness, (0 until n).toSet(),config))
 
     }
 
@@ -77,8 +83,8 @@ class FitnessSubsumeTest {
         val mutated = current.copy() as OneMaxIndividual
         mutated.setValue(0, 0.75)
 
-        val evaluatedCurrent = ff.calculateCoverage(current)!!
-        val evaluatedMutated = ff.calculateCoverage(mutated)!!
+        val evaluatedCurrent = ff.calculateCoverage(current, modifiedSpec = null)!!
+        val evaluatedMutated = ff.calculateCoverage(mutated, modifiedSpec = null)!!
         assertFalse(evaluatedCurrent.fitness.subsumes(evaluatedMutated.fitness, (0 until n).toSet(),config))
         assert(evaluatedMutated.fitness.subsumes(evaluatedCurrent.fitness, (0 until n).toSet(), config))
 
@@ -102,8 +108,8 @@ class FitnessSubsumeTest {
         val mutated = current.copy() as OneMaxIndividual
         mutated.setValue(0, 0.75)
 
-        val evaluatedCurrent = ff.calculateCoverage(current)!!
-        val evaluatedMutated = ff.calculateCoverage(mutated)!!
+        val evaluatedCurrent = ff.calculateCoverage(current, modifiedSpec = null)!!
+        val evaluatedMutated = ff.calculateCoverage(mutated, modifiedSpec = null)!!
         assertFalse(evaluatedCurrent.fitness.subsumes(evaluatedMutated.fitness, (0 until n).toSet(),config))
         assert(evaluatedMutated.fitness.subsumes(evaluatedCurrent.fitness, (0 until n).toSet(), config))
 

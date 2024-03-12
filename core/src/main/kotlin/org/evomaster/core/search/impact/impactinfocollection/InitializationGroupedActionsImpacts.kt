@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory
  * @property abstract indicates whether extract the actions in order to identify unique sub-sequence.
  * @property enableImpactOnDuplicatedTimes indicates whether collect impacts on duplicated times.
  */
-class InitializationActionImpacts(val abstract: Boolean, val enableImpactOnDuplicatedTimes: Boolean = false) : ImpactOfDuplicatedArtifact<ImpactsOfAction>() {
+class InitializationGroupedActionsImpacts(val abstract: Boolean, val enableImpactOnDuplicatedTimes: Boolean = false) : ImpactOfDuplicatedArtifact<ImpactsOfAction>() {
 
     companion object {
-        private val log: Logger = LoggerFactory.getLogger(InitializationActionImpacts::class.java)
+        private val log: Logger = LoggerFactory.getLogger(InitializationGroupedActionsImpacts::class.java)
     }
 
     /**
@@ -180,7 +180,7 @@ class InitializationActionImpacts(val abstract: Boolean, val enableImpactOnDupli
     /**
      * init current initializationImpact based on the specified [impact]
      */
-    fun initInitializationActions(impact: InitializationActionImpacts) {
+    fun initInitializationActions(impact: InitializationGroupedActionsImpacts) {
         //initPreCheck()
         clone(impact)
     }
@@ -251,8 +251,8 @@ class InitializationActionImpacts(val abstract: Boolean, val enableImpactOnDupli
         return template[generateTemplateKey(group.map { it.getName() })]
     }
 
-    fun copy(): InitializationActionImpacts {
-        val new = InitializationActionImpacts(abstract, enableImpactOnDuplicatedTimes)
+    fun copy(): InitializationGroupedActionsImpacts {
+        val new = InitializationGroupedActionsImpacts(abstract, enableImpactOnDuplicatedTimes)
         new.completeSequence.addAll(completeSequence.map { it.copy() })
         new.template.putAll(template.mapValues { it.value.map { v -> v.copy() } })
         new.indexMap.addAll(indexMap.map { Pair(it.first, it.second) })
@@ -264,8 +264,8 @@ class InitializationActionImpacts(val abstract: Boolean, val enableImpactOnDupli
     }
 
 
-    fun clone(): InitializationActionImpacts {
-        val new = InitializationActionImpacts(abstract, enableImpactOnDuplicatedTimes)
+    fun clone(): InitializationGroupedActionsImpacts {
+        val new = InitializationGroupedActionsImpacts(abstract, enableImpactOnDuplicatedTimes)
         new.completeSequence.addAll(completeSequence.map { it.clone() })
         new.template.putAll(template.mapValues { it.value.map { v -> v.clone() } })
         new.indexMap.addAll(indexMap.map { Pair(it.first, it.second) })
@@ -280,7 +280,7 @@ class InitializationActionImpacts(val abstract: Boolean, val enableImpactOnDupli
     /**
      * clone this based on [other]
      */
-    fun clone(other: InitializationActionImpacts) {
+    fun clone(other: InitializationGroupedActionsImpacts) {
         reset()
         existingSQLData = other.getExistingData()
         completeSequence.addAll(other.completeSequence.map { it.clone() })

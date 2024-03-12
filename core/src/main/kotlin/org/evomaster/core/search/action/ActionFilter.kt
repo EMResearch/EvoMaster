@@ -37,6 +37,16 @@ enum class ActionFilter {
     NO_SQL,
 
     /**
+     * actions for database handling, eg, SQL and Mongo
+     */
+    ONLY_DB,
+
+    /**
+     * actions which are not for database actions
+     */
+    NO_DB,
+
+    /**
      * actions which are External Service related actions
      */
     ONLY_EXTERNAL_SERVICE,

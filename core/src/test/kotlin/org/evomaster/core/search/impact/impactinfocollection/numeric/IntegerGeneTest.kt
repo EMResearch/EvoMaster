@@ -20,7 +20,7 @@ class IntegerGeneTest : GeneImpactTest() {
         else
             geneToMutate.value += 1
 
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     override fun getGene(): Gene = IntegerGene("i", value = 2)

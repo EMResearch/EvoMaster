@@ -39,7 +39,13 @@ class ObjectGeneImpact  (
         if (gc.previous == null){
             gc.current.fields.forEach {
                 val fImpact = fixedFields.getValue(it.name) as? GeneImpact?:throw IllegalArgumentException("impact should be gene impact")
-                val mutatedGeneWithContext = MutatedGeneWithContext(previous = null, current =  it, action = "none", position = -1, numOfMutatedGene = gc.current.fields.size)
+                val mutatedGeneWithContext = MutatedGeneWithContext(
+                    current =  it,
+                    actionName = "none",
+                    position = -1,
+                    previous = null,
+                    numOfMutatedGene = gc.current.fields.size,
+                )
                 fImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
             }
             return
@@ -56,7 +62,13 @@ class ObjectGeneImpact  (
 
         mutatedFields.forEach {g->
             val fImpact = fixedFields.getValue(g.first.name) as? GeneImpact?:throw IllegalArgumentException("impact should be gene impact")
-            val mutatedGeneWithContext = MutatedGeneWithContext(previous = g.second, current =  g.first, action = "none", position = -1, numOfMutatedGene = gc.numOfMutatedGene * mutatedFields.size)
+            val mutatedGeneWithContext = MutatedGeneWithContext(
+                current =  g.first,
+                actionName = "none",
+                position = -1,
+                previous = g.second,
+                numOfMutatedGene = gc.numOfMutatedGene * mutatedFields.size,
+            )
             fImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
         }
     }

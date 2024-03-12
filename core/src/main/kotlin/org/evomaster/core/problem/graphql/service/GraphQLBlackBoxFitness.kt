@@ -18,7 +18,11 @@ class GraphQLBlackBoxFitness : GraphQLFitness() {
         private val log: Logger = LoggerFactory.getLogger(GraphQLBlackBoxFitness::class.java)
     }
 
-    override fun doCalculateCoverage(individual: GraphQLIndividual, targets: Set<Int>, allCovered: Boolean): EvaluatedIndividual<GraphQLIndividual>? {
+    override fun doCalculateCoverage(
+        individual: GraphQLIndividual,
+        targets: Set<Int>,
+        allCovered: Boolean
+    ): EvaluatedIndividual<GraphQLIndividual>? {
 
         if(config.bbExperiments){
             /*

@@ -59,7 +59,7 @@ class SqlXmlGeneImpactTest : GeneImpactTest() {
             else -> TODO()
         }
 
-        return MutatedGeneWithContext(current = geneToMutate, previous = original)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     @Test

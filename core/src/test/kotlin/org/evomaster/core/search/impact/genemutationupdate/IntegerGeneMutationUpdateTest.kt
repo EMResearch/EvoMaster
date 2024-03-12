@@ -74,7 +74,7 @@ class IntegerGeneMutationUpdateTest {
     fun testHistoryExtraction(){
         config.archiveGeneMutation = EMConfig.ArchiveGeneMutation.NONE
 
-        val first = ff.calculateCoverage(sampler.sample())!!.also { archive.addIfNeeded(it) }
+        val first = ff.calculateCoverage(sampler.sample(), modifiedSpec = null)!!.also { archive.addIfNeeded(it) }
 
         val mutated = mutator.mutateAndSave(10, first, archive)
 

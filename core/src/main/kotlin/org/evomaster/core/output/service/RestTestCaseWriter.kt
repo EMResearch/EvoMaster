@@ -1,11 +1,9 @@
 package org.evomaster.core.output.service
 
 import com.google.inject.Inject
-import org.apache.xpath.operations.Bool
 import org.evomaster.core.EMConfig
 import org.evomaster.core.output.Lines
 import org.evomaster.core.output.SqlWriter
-import org.evomaster.core.problem.externalservice.HostnameResolutionAction
 import org.evomaster.core.problem.httpws.HttpWsAction
 import org.evomaster.core.problem.httpws.HttpWsCallResult
 import org.evomaster.core.problem.rest.RestCallAction
@@ -19,7 +17,6 @@ import org.evomaster.core.search.gene.utils.GeneUtils
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
 import java.util.*
-import javax.swing.text.StyledEditorKit.BoldAction
 
 class RestTestCaseWriter : HttpWsTestCaseWriter {
 
@@ -114,7 +111,7 @@ class RestTestCaseWriter : HttpWsTestCaseWriter {
                             format,
                             c.first,
                             lines,
-                            ind.individual.seeDbActions(),
+                            ind.individual.seeSqlDbActions(),
                             groupIndex = index.toString(),
                             insertionVars = insertionVars,
                             skipFailure = config.skipFailureSQLInTestFile

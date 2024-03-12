@@ -101,7 +101,7 @@ abstract class SearchAlgorithm<T> where T : Individual {
 
         if(config.addPreDefinedTests) {
             for (ind in sampler.getPreDefinedIndividuals()) {
-                ff.calculateCoverage(ind)?.run {
+                ff.calculateCoverage(ind, modifiedSpec = null)?.run {
                     archive.addIfNeeded(this)
                 }
             }

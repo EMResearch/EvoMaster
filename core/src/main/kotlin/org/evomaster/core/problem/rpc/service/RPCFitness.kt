@@ -7,24 +7,17 @@ import org.evomaster.core.Lazy
 import org.evomaster.core.sql.SqlAction
 import org.evomaster.core.problem.api.service.ApiWsFitness
 import org.evomaster.core.problem.enterprise.EnterpriseActionGroup
-import org.evomaster.core.problem.externalservice.rpc.DbAsExternalServiceAction
-import org.evomaster.core.problem.externalservice.rpc.RPCExternalServiceAction
-import org.evomaster.core.problem.externalservice.rpc.parm.ClassResponseParam
-import org.evomaster.core.problem.externalservice.rpc.parm.UpdateForRPCResponseParam
 import org.evomaster.core.problem.rpc.RPCCallAction
 import org.evomaster.core.problem.rpc.RPCCallResult
 import org.evomaster.core.problem.rpc.RPCCallResultCategory
 import org.evomaster.core.problem.rpc.RPCIndividual
 import org.evomaster.core.problem.rpc.param.RPCParam
 import org.evomaster.core.problem.util.ParamUtil
-import org.evomaster.core.problem.util.ParserDtoUtil.wrapWithOptionalGene
 import org.evomaster.core.search.action.ActionResult
 import org.evomaster.core.search.EvaluatedIndividual
 import org.evomaster.core.search.FitnessValue
 import org.evomaster.core.search.GroupsOfChildren
-import org.evomaster.core.search.action.ActionComponent
 import org.evomaster.core.search.gene.interfaces.CollectionGene
-import org.evomaster.core.search.gene.optional.OptionalGene
 import org.evomaster.core.taint.TaintAnalysis
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -42,7 +35,11 @@ class RPCFitness : ApiWsFitness<RPCIndividual>() {
 
     @Inject lateinit var rpcHandler: RPCEndpointsHandler
 
-    override fun doCalculateCoverage(individual: RPCIndividual, targets: Set<Int>, allCovered: Boolean): EvaluatedIndividual<RPCIndividual>? {
+    override fun doCalculateCoverage(
+        individual: RPCIndividual,
+        targets: Set<Int>,
+        allCovered: Boolean
+    ): EvaluatedIndividual<RPCIndividual>? {
 
         rc.resetSUT()
 

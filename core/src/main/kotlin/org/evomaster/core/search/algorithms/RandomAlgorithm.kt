@@ -2,7 +2,6 @@ package org.evomaster.core.search.algorithms
 
 import org.evomaster.core.EMConfig
 import org.evomaster.core.search.Individual
-import org.evomaster.core.search.Solution
 import org.evomaster.core.search.service.SearchAlgorithm
 
 
@@ -20,7 +19,7 @@ class RandomAlgorithm <T> : SearchAlgorithm<T>() where T : Individual {
     override fun searchOnce() {
             val individual = sampler.sample(true)
 
-            ff.calculateCoverage(individual)?.run { archive.addIfNeeded(this) }
+            ff.calculateCoverage(individual, modifiedSpec = null)?.run { archive.addIfNeeded(this) }
     }
 
 }

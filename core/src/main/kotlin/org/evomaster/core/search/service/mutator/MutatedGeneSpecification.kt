@@ -1,5 +1,6 @@
 package org.evomaster.core.search.service.mutator
 
+import org.evomaster.core.search.EnvironmentAction
 import org.evomaster.core.sql.SqlAction
 import org.evomaster.core.search.action.Action
 import org.evomaster.core.search.Individual
@@ -7,6 +8,17 @@ import org.evomaster.core.search.gene.Gene
 
 /**
  * created by manzh on 2019-09-10
+ *
+ * Class used to collect what mutations have been applied to the genes in an individual.
+ *
+ * Based on their possible impact on fitness, based on MAIN actions or DB actions, we treat them separately.
+ * Eg, could have different mutation rates based on type.
+ *
+ * TODO how to handle new types? and how to make sure to crash here if new type is introduced but this class
+ * is not updated?
+ * FIXME for example, now we have actions for MongoDB and ExternalService, and in future might have Kafka as well, plus
+ * who knows in  some years...
+ * likely issue a warning and have some default behavior
  *
  * @property mutatedGenes records what genes are mutated
  * @property mutatedDbGenes records what db genes are mutated
@@ -22,16 +34,16 @@ data class MutatedGeneSpecification (
     val mutatedDbGenes : MutableList<MutatedGene> = mutableListOf(),
     val mutatedInitGenes : MutableList<MutatedGene> = mutableListOf(),
 
-        //SQL handling
-    val addedInitializationGenes : MutableList<Gene> = mutableListOf(),
-    val addedExistingDataInitialization: MutableList<Action> = mutableListOf(),
-    val addedInitializationGroup: MutableList<List<Action>> = mutableListOf(),
+    //init action handling
+    val addedActionsInInitializationGenes : MutableMap<String, MutableList<Gene>> = mutableMapOf(),
+    val addedExistingDataInInitialization: MutableMap<String, MutableList<EnvironmentAction>> = mutableMapOf(),
+    val addedGroupedActionsInInitialization: MutableMap<String, MutableList<List<EnvironmentAction>>> = mutableMapOf(),
 
-        //SQL resource handling
+    //SQL resource handling
     val addedSqlActions : MutableList<List<SqlAction>> = mutableListOf(),
     val removedSqlActions : MutableList<Pair<SqlAction, Int>> = mutableListOf(),
 
-        // external service actions
+    // external service actions
     val addedExternalServiceActions : MutableList<Action> = mutableListOf()
 ){
 
@@ -86,8 +98,7 @@ data class MutatedGeneSpecification (
             return mutatedInitGenes.any { it.type == MutatedType.MODIFY && it.actionPosition == actionIndex }
 
         return (mutatedGenes.plus(mutatedDbGenes)).any { it.type == MutatedType.MODIFY && (
-                it.actionPosition == actionIndex || it.localId == actionLocalId
-                ) }
+                it.actionPosition == actionIndex || it.localId == actionLocalId) }
     }
 
     fun getRemoved(isRest : Boolean) =
@@ -104,7 +115,7 @@ data class MutatedGeneSpecification (
 
     fun numOfMutatedGeneInfo() = mutatedGenes.size + mutatedDbGenes.size+ mutatedInitGenes.size
 
-    fun didAddInitializationGenes() = addedInitializationGenes.isNotEmpty() || addedExistingDataInitialization.isNotEmpty()
+    fun didAddInitializationGenes() = addedActionsInInitializationGenes.isNotEmpty() || addedExistingDataInInitialization.isNotEmpty()
 
     data class MutatedGene(
         /**

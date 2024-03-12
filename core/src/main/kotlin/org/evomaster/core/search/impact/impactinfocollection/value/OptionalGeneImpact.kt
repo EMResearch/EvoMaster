@@ -70,9 +70,9 @@ class OptionalGeneImpact  (
 
         if (gc.current.isActive){
             val mutatedGeneWithContext = MutatedGeneWithContext(
-                    previous = if (gc.previous==null) null else (gc.previous as OptionalGene).gene,
-                    current = gc.current.gene,
-                    numOfMutatedGene = gc.numOfMutatedGene
+                current = gc.current.gene,
+                previous = if (gc.previous==null) null else (gc.previous as OptionalGene).gene,
+                numOfMutatedGene = gc.numOfMutatedGene,
             )
             geneImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
         }

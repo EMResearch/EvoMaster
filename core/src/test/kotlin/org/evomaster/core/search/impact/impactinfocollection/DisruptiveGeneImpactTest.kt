@@ -24,7 +24,7 @@ class DisruptiveGeneImpactTest : GeneImpactTest() {
         geneToMutate as CustomMutationRateGene<IntegerGene>
         val gene = geneToMutate.gene
         gene.value += if (gene.value + 1 > gene.getMaximum()) -1 else 1
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     @Test

@@ -30,7 +30,7 @@ class MioAlgorithm<T> : SearchAlgorithm<T>() where T : Individual {
 
                 Lazy.assert { ind.isInitialized() && ind.searchGlobalState!=null }
 
-                ff.calculateCoverage(ind)?.run {
+                ff.calculateCoverage(ind, modifiedSpec = null)?.run {
 
                     archive.addIfNeeded(this)
                     sampler.feedback(this)

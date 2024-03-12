@@ -17,7 +17,11 @@ class PrimitiveTypeMatchFitness : FitnessFunction<PrimitiveTypeMatchIndividual>(
 
     var type : ONE2M = ONE2M.ONE_EQUAL_WITH_ONE
 
-    override fun doCalculateCoverage(individual: PrimitiveTypeMatchIndividual, targets: Set<Int>, allCovered: Boolean): EvaluatedIndividual<PrimitiveTypeMatchIndividual>? {
+    override fun doCalculateCoverage(
+        individual: PrimitiveTypeMatchIndividual,
+        targets: Set<Int>,
+        allCovered: Boolean
+    ): EvaluatedIndividual<PrimitiveTypeMatchIndividual>? {
 
         val fv = FitnessValue(individual.size().toDouble())
 

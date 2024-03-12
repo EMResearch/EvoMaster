@@ -58,7 +58,14 @@ class CompositeFixedGeneImpact(
             gc.current.getViewOfChildren().forEachIndexed { index, i->
                 val fImpact = childrenImpacts[getKey(index, i.name)] as? GeneImpact
                     ?:throw IllegalArgumentException("impact should be gene impact")
-                val mutatedGeneWithContext = MutatedGeneWithContext(previous = null, current =  i, action = "none", position = -1, numOfMutatedGene = gc.current.getViewOfChildren().size)
+                val mutatedGeneWithContext = MutatedGeneWithContext(
+                    current =  i,
+                    actionName = "none",
+                    position = -1,
+                    previous = null,
+                    numOfMutatedGene = gc.current.getViewOfChildren().size,
+                    actionTypeClass = null
+                )
                 fImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
             }
             return
@@ -76,7 +83,14 @@ class CompositeFixedGeneImpact(
         mutatedFields.forEach {p->
             val g = p.second
             val fImpact = getChildImpact(p.first, g.first.name) as? GeneImpact?:throw IllegalArgumentException("impact should be gene impact")
-            val mutatedGeneWithContext = MutatedGeneWithContext(previous = g.second, current =  g.first, action = "none", position = -1, numOfMutatedGene = gc.numOfMutatedGene * mutatedFields.size)
+            val mutatedGeneWithContext = MutatedGeneWithContext(
+                current =  g.first,
+                actionName = "none",
+                position = -1,
+                previous = g.second,
+                numOfMutatedGene = gc.numOfMutatedGene * mutatedFields.size,
+                actionTypeClass = null
+            )
             fImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
         }
     }

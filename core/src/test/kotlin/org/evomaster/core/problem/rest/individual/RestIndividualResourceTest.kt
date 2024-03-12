@@ -82,7 +82,8 @@ class RestIndividualResourceTest : RestIndividualTestBase() {
             existingData,
             mutated.individual.seeInitializingActions().filterIsInstance<SqlAction>().count { it.representExistingData })
 
-        val currentInit = mutatedImpact.initActionImpacts.getOriginalSize(includeExistingSQLData = true)
+        val currentInit =
+            mutatedImpact.initActionImpacts.values.sumOf { it.getOriginalSize(includeExistingSQLData = true) }
 
         val origInit = original.individual.seeInitializingActions()
         val mutatedInit = mutated.individual.seeInitializingActions()
@@ -92,7 +93,7 @@ class RestIndividualResourceTest : RestIndividualTestBase() {
         // check whether impact info is consistent with individual after mutation
         mutated.individual.seeInitializingActions().filterIsInstance<SqlAction>().forEachIndexed { index, dbAction ->
             if (!dbAction.representExistingData) {
-                val impact = mutatedImpact.initActionImpacts.getImpactOfAction(dbAction.getName(), index)
+                val impact = mutatedImpact.initActionImpacts[dbAction::class.java.name]!!.getImpactOfAction(dbAction.getName(), index)
                 assertNotNull(impact)
             }
         }
@@ -125,20 +126,22 @@ class RestIndividualResourceTest : RestIndividualTestBase() {
                             val actionIndex = if (fromInit) index else (index - mutatedInit.size)
                             val fixed = mutated.individual.seeFixedMainActions().contains(action)
                             val ogeneImpact = copyOfImpact!!.getGene(
-                                localId = action.getLocalId(),
-                                fixedIndexedAction = fixed,
                                 actionName = action.getName(),
+                                initActionClassName = action::class.java.name,
                                 geneId = impactId,
                                 actionIndex = actionIndex,
+                                localId = action.getLocalId(),
+                                fixedIndexedAction = fixed,
                                 fromInitialization = fromInit
                             )
                             assertNotNull(ogeneImpact)
                             val mgeneImpact = mutatedImpact.getGene(
-                                localId = action.getLocalId(),
-                                fixedIndexedAction = fixed,
                                 actionName = action.getName(),
+                                initActionClassName = action::class.java.name,
                                 geneId = impactId,
                                 actionIndex = actionIndex,
+                                localId = action.getLocalId(),
+                                fixedIndexedAction = fixed,
                                 fromInitialization = fromInit
                             )
                             assertNotNull(impactId)

@@ -20,7 +20,7 @@ class DoubleGeneTest : GeneImpactTest() {
         else
             geneToMutate.value += 1.0
 
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     override fun getGene(): Gene = DoubleGene("i",  value= 1.0)

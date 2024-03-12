@@ -34,9 +34,9 @@ class SqlJsonGeneImpact(
         if (gc.previous == null && impactTargets.isNotEmpty()) return
         if (gc.previous == null){
             val mutatedGeneWithContext = MutatedGeneWithContext(
-                    previous = null,
-                    current = gc.current.objectGene,
-                    numOfMutatedGene = gc.numOfMutatedGene
+                current = gc.current.objectGene,
+                previous = null,
+                numOfMutatedGene = gc.numOfMutatedGene,
             )
             geneImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
             return
@@ -46,9 +46,9 @@ class SqlJsonGeneImpact(
         }
 
         val mutatedGeneWithContext = MutatedGeneWithContext(
-                previous = gc.previous.objectGene,
-                current = gc.current.objectGene,
-                numOfMutatedGene = gc.numOfMutatedGene
+            current = gc.current.objectGene,
+            previous = gc.previous.objectGene,
+            numOfMutatedGene = gc.numOfMutatedGene,
         )
         geneImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
     }

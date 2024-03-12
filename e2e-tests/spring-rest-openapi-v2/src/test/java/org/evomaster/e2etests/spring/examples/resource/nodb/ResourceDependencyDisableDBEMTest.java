@@ -6,9 +6,6 @@ import org.evomaster.core.search.Solution;
 import org.evomaster.e2etests.spring.examples.resource.ResourceTestBase;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,7 +43,7 @@ public class ResourceDependencyDisableDBEMTest extends ResourceTestBase {
                     assertTrue(anyDBExecution);
 
                     boolean anyDBAction = solution.getIndividuals().stream().anyMatch(
-                            s -> !s.getIndividual().seeDbActions().isEmpty());
+                            s -> !s.getIndividual().seeSqlDbActions().isEmpty());
 
                     assertFalse(anyDBAction);
 

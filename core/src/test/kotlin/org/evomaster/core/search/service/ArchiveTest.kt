@@ -55,7 +55,7 @@ class ArchiveTest{
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 1.0)
 
-        val added = archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        val added = archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
         assertTrue(added)
 
         val solution = archive.extractSolution()
@@ -70,12 +70,12 @@ class ArchiveTest{
         val a = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
 
         val b = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(1, 0.5)
-        val added = archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        val added = archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
         assertTrue(added)
 
         val solution = archive.extractSolution()
@@ -91,12 +91,12 @@ class ArchiveTest{
         val a = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
 
         val b = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(1, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
 
         val solution = archive.extractSolution()
 
@@ -110,7 +110,7 @@ class ArchiveTest{
         val a = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 0.0)
-        val added = archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        val added = archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
 
         //h=0 tests should not be added, as they give no contribution
         assertFalse(added)
@@ -130,7 +130,7 @@ class ArchiveTest{
         val a = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 0.25)
-        val added = archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        val added = archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
         assertTrue(added)
 
         val sampled = archive.sampleIndividual()
@@ -143,13 +143,13 @@ class ArchiveTest{
         val a = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 0.25)
-        var added = archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        var added = archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
         assertTrue(added)
 
         val b = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(0, 0.5)
-        added = archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        added = archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
         assertTrue(added)
 
         /*
@@ -171,13 +171,13 @@ class ArchiveTest{
         val a = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 0.25)
-        var added = archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        var added = archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
         assertTrue(added)
 
         val b = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(0, 0.5)
-        added = archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        added = archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
         assertTrue(added)
 
         //reduce buffer size, so "a" should disappear when sampling
@@ -203,13 +203,13 @@ class ArchiveTest{
         val a = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 0.25)
-        var added = archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        var added = archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
         assertTrue(added)
 
         val b = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(0, 1.0)
-        added = archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        added = archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
         assertTrue(added)
 
         /*
@@ -233,13 +233,13 @@ class ArchiveTest{
         val a = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 0.25)
-        var added = archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        var added = archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
         assertTrue(added)
 
         val b = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(0, 0.25)
-        added = archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        added = archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
         assertTrue(added)
 
         //both should be sampled
@@ -274,20 +274,20 @@ class ArchiveTest{
         val a = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 0.25)
-        var added = archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        var added = archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
         assertTrue(added)
 
         val b = OneMaxIndividual(3)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(0, 0.25)
-        added = archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        added = archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
         assertTrue(added)
 
         //when this inserted, "b" should be removed, as the longest
         val c = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(c)
         c.setValue(0, 0.25)
-        added = archive.addIfNeeded(ff.calculateCoverage(c)!!)
+        added = archive.addIfNeeded(ff.calculateCoverage(c, modifiedSpec = null)!!)
         assertTrue(added)
 
         val sizes = (1..50).map { archive.sampleIndividual() }
@@ -310,19 +310,19 @@ class ArchiveTest{
         val a = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 0.25)
-        archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
 
 
         val b = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(0, 0.75)
-        archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
 
         //when this inserted, "a" should be removed, as the worst score
         val c = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(c)
         c.setValue(0, 0.5)
-        archive.addIfNeeded(ff.calculateCoverage(c)!!)
+        archive.addIfNeeded(ff.calculateCoverage(c, modifiedSpec = null)!!)
 
 
         val sizes = (1..50).map { archive.sampleIndividual() }
@@ -340,13 +340,13 @@ class ArchiveTest{
         val a = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
 
         //not accepted, as longer
         val b = OneMaxIndividual(3)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(0, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
 
         var sizes = (1..50).map { archive.sampleIndividual() }
                 .map{ind -> ind.individual.size()}
@@ -359,7 +359,7 @@ class ArchiveTest{
         val c = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(c)
         c.setValue(0, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(c)!!)
+        archive.addIfNeeded(ff.calculateCoverage(c, modifiedSpec = null)!!)
 
         sizes = (1..50).map { archive.sampleIndividual() }
                 .map{ind -> ind.individual.size()}
@@ -376,12 +376,12 @@ class ArchiveTest{
         val a = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
 
         val b = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(b)
         b.setValue(1, 1.0) //covering a different branch
-        archive.addIfNeeded(ff.calculateCoverage(b)!!)
+        archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
 
         var sizes = (1..50).map { archive.sampleIndividual() }
                 .map{ind -> ind.individual.size()}
@@ -395,7 +395,7 @@ class ArchiveTest{
         TestUtils.doInitializeIndividualForTesting(c)
         c.setValue(0, 1.0)
         c.setValue(1, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(c)!!)
+        archive.addIfNeeded(ff.calculateCoverage(c, modifiedSpec = null)!!)
 
         sizes = (1..50).map { archive.sampleIndividual() }
                 .map{ind -> ind.individual.size()}
@@ -410,7 +410,7 @@ class ArchiveTest{
         TestUtils.doInitializeIndividualForTesting(d)
         d.setValue(0, 1.0)
         d.setValue(1, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(d)!!)
+        archive.addIfNeeded(ff.calculateCoverage(d, modifiedSpec = null)!!)
 
         var scores = (1..50).map { archive.sampleIndividual() }
                 .map{ind -> ind.fitness.computeFitnessScore()}
@@ -420,8 +420,8 @@ class ArchiveTest{
 
 
         //now, add "a" and "b" back. should fail, as they have worse overall fitness than "d"
-        assertFalse(archive.addIfNeeded(ff.calculateCoverage(a)!!))
-        assertFalse(archive.addIfNeeded(ff.calculateCoverage(b)!!))
+        assertFalse(archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!))
+        assertFalse(archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!))
 
         // "d" should still be the only individual
         scores = (1..50).map { archive.sampleIndividual() }
@@ -440,14 +440,14 @@ class ArchiveTest{
             val b = OneMaxIndividual(2)
             TestUtils.doInitializeIndividualForTesting(b)
             b.setValue(0, randomness.choose(notCovered))
-            archive.addIfNeeded(ff.calculateCoverage(b)!!)
+            archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
             assertFalse(archive.isCovered(0))
         }
 
         val a = OneMaxIndividual(2)
         TestUtils.doInitializeIndividualForTesting(a)
         a.setValue(0, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(a)!!)
+        archive.addIfNeeded(ff.calculateCoverage(a, modifiedSpec = null)!!)
 
         assertTrue(archive.isCovered(0))
 
@@ -462,7 +462,7 @@ class ArchiveTest{
             val b = OneMaxIndividual(2)
             TestUtils.doInitializeIndividualForTesting(b)
             b.setValue(0, randomness.choose(notCovered))
-            archive.addIfNeeded(ff.calculateCoverage(b)!!)
+            archive.addIfNeeded(ff.calculateCoverage(b, modifiedSpec = null)!!)
             //if a target is covered, it should be always covered afterwards
             assertTrue(archive.isCovered(0))
         }
@@ -471,7 +471,7 @@ class ArchiveTest{
         val better = OneMaxIndividual(1)
         TestUtils.doInitializeIndividualForTesting(better)
         better.setValue(0, 1.0)
-        archive.addIfNeeded(ff.calculateCoverage(better)!!)
+        archive.addIfNeeded(ff.calculateCoverage(better, modifiedSpec = null)!!)
 
         assertTrue(archive.isCovered(0))
 

@@ -54,11 +54,19 @@ class DateTimeGeneImpact(sharedImpactInfo: SharedImpactInfo, specificImpactInfo:
         countImpactAndPerformance(noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation, num = gc.numOfMutatedGene)
 
         if (dateMutated){
-            val mutatedGeneWithContext = MutatedGeneWithContext(previous = if (gc.previous==null) null else (gc.previous as DateTimeGene).date, current = gc.current.date, numOfMutatedGene = num)
+            val mutatedGeneWithContext = MutatedGeneWithContext(
+                current = gc.current.date,
+                previous = if (gc.previous==null) null else (gc.previous as DateTimeGene).date,
+                numOfMutatedGene = num,
+            )
             dateGeneImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets=noImpactTargets,impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
         }
         if (timeMutated){
-            val mutatedGeneWithContext = MutatedGeneWithContext(previous = if (gc.previous==null) null else (gc.previous as DateTimeGene).time, current = gc.current.time, numOfMutatedGene = num)
+            val mutatedGeneWithContext = MutatedGeneWithContext(
+                current = gc.current.time,
+                previous = if (gc.previous==null) null else (gc.previous as DateTimeGene).time,
+                numOfMutatedGene = num,
+            )
             timeGeneImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets =noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
         }
     }

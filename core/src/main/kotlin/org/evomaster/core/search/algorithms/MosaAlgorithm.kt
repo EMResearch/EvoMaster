@@ -3,7 +3,6 @@ package org.evomaster.core.search.algorithms
 import org.evomaster.core.EMConfig
 import org.evomaster.core.search.EvaluatedIndividual
 import org.evomaster.core.search.Individual
-import org.evomaster.core.search.Solution
 import org.evomaster.core.search.service.SearchAlgorithm
 import org.evomaster.core.logging.LoggingUtil
 import java.util.ArrayList
@@ -305,7 +304,7 @@ class MosaAlgorithm<T> : SearchAlgorithm<T>() where T : Individual {
 
     private fun sampleIndividual(): EvaluatedIndividual<T>? {
 
-        return ff.calculateCoverage(sampler.sample())
+        return ff.calculateCoverage(sampler.sample(), modifiedSpec = null)
                 ?.also { archive.addIfNeeded(it) }
     }
 }

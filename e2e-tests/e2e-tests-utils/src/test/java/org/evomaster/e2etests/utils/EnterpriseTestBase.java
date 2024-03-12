@@ -472,7 +472,7 @@ public abstract class EnterpriseTestBase {
     protected void assertInsertionIntoTable(Solution<? extends ApiWsIndividual> solution, String tableName) {
 
         boolean ok = solution.getIndividuals().stream().anyMatch(
-                ind -> ind.getIndividual().seeDbActions().stream().anyMatch(
+                ind -> ind.getIndividual().seeSqlDbActions().stream().anyMatch(
                         da -> da.getTable().getName().equalsIgnoreCase(tableName))
         );
 

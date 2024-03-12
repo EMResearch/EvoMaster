@@ -41,7 +41,7 @@ class DateTimeGeneImpactTest : GeneImpactTest() {
             }
         }
 
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     @Test

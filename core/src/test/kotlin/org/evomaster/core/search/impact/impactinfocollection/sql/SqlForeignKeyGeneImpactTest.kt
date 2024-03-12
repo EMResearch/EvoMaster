@@ -19,7 +19,7 @@ class SqlForeignKeyGeneImpactTest : GeneImpactTest() {
         else
             geneToMutate.uniqueIdOfPrimaryKey += 1L
 
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     override fun getGene(): Gene = SqlForeignKeyGene(

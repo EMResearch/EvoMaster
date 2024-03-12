@@ -27,7 +27,7 @@ class SqlPrimaryGeneImpactTest : GeneImpactTest() {
         geneToMutate as SqlPrimaryKeyGene
         val gene = geneToMutate.gene as IntegerGene
         gene.value += if (gene.value + 1 > gene.getMaximum()) -1 else 1
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     @Test

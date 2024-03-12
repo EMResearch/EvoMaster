@@ -149,7 +149,7 @@ class ImpactUtils {
                     val id = generateGeneId(individual, g)
                     val contexts = mutatedGenesWithContext.getOrPut(id){ mutableListOf()}
                     val previous = findGeneById(previousIndividual, id)?: throw IllegalArgumentException("mismatched previous individual")
-                    contexts.add(MutatedGeneWithContext(g, previous = previous, numOfMutatedGene = mutatedGenes.size))
+                    contexts.add(MutatedGeneWithContext(g, previous = previous, numOfMutatedGene = mutatedGenes.size, actionTypeClass = null))
                 }
             }else{
                 individual.seeAllActions().forEachIndexed { index, action ->
@@ -157,7 +157,16 @@ class ImpactUtils {
                         val id = generateGeneId(action, g)
                         val contexts = mutatedGenesWithContext.getOrPut(id){ mutableListOf()}
                         val previous = findGeneById(previousIndividual, id, action.getName(), index, action.getLocalId(), action is ApiExternalServiceAction, false)?: throw IllegalArgumentException("mismatched previous individual")
-                        contexts.add(MutatedGeneWithContext(g, action.getName(), index, action.getLocalId(), action is ApiExternalServiceAction, previous, mutatedGenes.size))
+                        contexts.add(MutatedGeneWithContext(
+                            g,
+                            action.getName(),
+                            index,
+                            action.getLocalId(),
+                            action is ApiExternalServiceAction,
+                            previous,
+                            mutatedGenes.size,
+                            actionTypeClass = action::class.java.name
+                        ))
                     }
                 }
             }
@@ -192,7 +201,7 @@ class ImpactUtils {
                            index for db gene might be changed if new insertions are added.
                            then there is a need to update the index in previous based on the number of added
                          */
-                        val indexInPrevious = if (index == null) null else index - (if (isInit && !mutatedGeneSpecification.addedExistingDataInitialization.contains(a)) mutatedGeneSpecification.addedExistingDataInitialization.size else 0)
+                        val indexInPrevious = if (index == null) null else index - (if (isInit && mutatedGeneSpecification.addedExistingDataInInitialization[a::class.java.name]?.contains(a) == false) mutatedGeneSpecification.addedExistingDataInInitialization[a::class.java.name]?.size?:0 else 0)
                         val previous = findGeneById(
                                 individual=previousIndividual,
                                 id = id,
@@ -204,9 +213,14 @@ class ImpactUtils {
                         )
                         list.add(MutatedGeneWithContext(
                             current = mutatedg,
-                            previous = previous,
+                            actionName = a.getName(),
                             position = index,
-                            action = a.getName(), actionLocalId = a.getLocalId(), isDynamicAction = index == null, numOfMutatedGene = num))
+                            actionLocalId = a.getLocalId(),
+                            isDynamicAction = index == null,
+                            previous = previous,
+                            numOfMutatedGene = num,
+                            actionTypeClass = a::class.java.name
+                        ))
                     }
                 }
             }
@@ -233,7 +247,7 @@ class ImpactUtils {
                 individual.seeGenes().filter { mutatedGeneSpecification.mutatedGeneInfo().contains(it) }.forEach { g->
                     val id = generateGeneId(individual, g)
                     val previous = findGeneById(previousIndividual, id)?: throw IllegalArgumentException("mismatched previous individual")
-                    list.add(MutatedGeneWithContext(g, previous = previous, numOfMutatedGene = num))
+                    list.add(MutatedGeneWithContext(g, previous = previous, numOfMutatedGene = num, actionTypeClass = null))
                 }
             }
 

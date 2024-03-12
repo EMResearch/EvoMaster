@@ -20,7 +20,7 @@ class LongGeneTest : GeneImpactTest() {
         else
             geneToMutate.value += 1L
 
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     override fun getGene(): Gene = LongGene("i",  value= 1L)

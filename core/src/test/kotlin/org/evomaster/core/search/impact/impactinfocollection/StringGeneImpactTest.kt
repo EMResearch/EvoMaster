@@ -25,6 +25,6 @@ class StringGeneImpactTest : GeneImpactTest() {
                 value += "a"
         }
 
-        return MutatedGeneWithContext(current = geneToMutate, previous = original)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 }

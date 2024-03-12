@@ -194,12 +194,13 @@ class RestResourceCalls(
             ActionFilter.ALL -> sqlActions.plus(externalServiceActions).plus(mainActions) // FIXME: Is this correct?
             ActionFilter.INIT -> sqlActions.plus(mongoDbActions).plus(dnsActions)
             ActionFilter.ONLY_SQL -> sqlActions
-            ActionFilter.NO_INIT, ActionFilter.NO_SQL -> externalServiceActions.plus(mainActions)
+            ActionFilter.NO_INIT, ActionFilter.NO_SQL, ActionFilter.NO_DB -> externalServiceActions.plus(mainActions)
             ActionFilter.MAIN_EXECUTABLE -> mainActions
             ActionFilter.ONLY_EXTERNAL_SERVICE -> externalServiceActions
             ActionFilter.NO_EXTERNAL_SERVICE -> sqlActions.plus(mainActions)
             ActionFilter.ONLY_MONGO -> mongoDbActions
             ActionFilter.ONLY_DNS -> dnsActions
+            ActionFilter.ONLY_DB -> sqlActions.plus(mongoDbActions)
         }
     }
 

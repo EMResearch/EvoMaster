@@ -38,9 +38,9 @@ class SqlXmlGeneImpact (sharedImpactInfo: SharedImpactInfo, specificImpactInfo: 
         }
 
         val mutatedGeneWithContext = MutatedGeneWithContext(
-                previous = if (gc.previous==null) null else (gc.previous as SqlXMLGene).objectGene,
-                current = gc.current.objectGene,
-                numOfMutatedGene = gc.numOfMutatedGene
+            current = gc.current.objectGene,
+            previous = if (gc.previous==null) null else (gc.previous as SqlXMLGene).objectGene,
+            numOfMutatedGene = gc.numOfMutatedGene,
         )
         geneImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
 

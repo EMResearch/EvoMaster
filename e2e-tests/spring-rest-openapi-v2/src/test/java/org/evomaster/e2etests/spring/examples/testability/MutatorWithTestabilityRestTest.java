@@ -77,7 +77,7 @@ public class MutatorWithTestabilityRestTest extends SpringTestBase {
                     }
                     if (ind.seeMainExecutableActions().stream().anyMatch(a-> anyExcludedAction(sampler, a)))
                         fail("cannot find any valid individual");
-                    archive.addIfNeeded(ff.calculateCoverage(ind, Collections.emptySet()));
+                    archive.addIfNeeded(ff.calculateCoverage(ind, Collections.emptySet(), null));
 
                     assertNotNull(ind);
 
@@ -87,14 +87,14 @@ public class MutatorWithTestabilityRestTest extends SpringTestBase {
                     List<String> foos = improvingStringValues(length, "foo");
 
                     int i = 0;
-                    EvaluatedIndividual<RestIndividual> current = ff.calculateCoverage(mutate(dates.get(i), ns.get(i), foos.get(i), ind), Collections.emptySet());
+                    EvaluatedIndividual<RestIndividual> current = ff.calculateCoverage(mutate(dates.get(i), ns.get(i), foos.get(i), ind), Collections.emptySet(), null);
                     archive.addIfNeeded(current);
 
                     Set<Integer> targets = new HashSet<>();
                     targets.addAll(archive.notCoveredTargets());
                     while (i < length-1){
                         i++;
-                        EvaluatedIndividual<RestIndividual> mutated = ff.calculateCoverage(mutate(dates.get(i), ns.get(i), foos.get(i), ind), Collections.emptySet());
+                        EvaluatedIndividual<RestIndividual> mutated = ff.calculateCoverage(mutate(dates.get(i), ns.get(i), foos.get(i), ind), Collections.emptySet(), null);
                         EvaluatedMutation result = mutator.evaluateMutation(mutated, current, targets, archive);
                         assertNotEquals(EvaluatedMutation.WORSE_THAN, result);
 

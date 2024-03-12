@@ -54,9 +54,9 @@ class DisruptiveGeneImpact (
         }
 
         val mutatedGeneWithContext = MutatedGeneWithContext(
-                previous = if (gc.previous==null) null else (gc.previous as CustomMutationRateGene<*>).gene,
-                current = gc.current.gene,
-                numOfMutatedGene = gc.numOfMutatedGene
+            current = gc.current.gene,
+            previous = if (gc.previous==null) null else (gc.previous as CustomMutationRateGene<*>).gene,
+            numOfMutatedGene = gc.numOfMutatedGene,
         )
         geneImpact.countImpactWithMutatedGeneWithContext(mutatedGeneWithContext, noImpactTargets = noImpactTargets, impactTargets = impactTargets, improvedTargets = improvedTargets, onlyManipulation = onlyManipulation)
     }

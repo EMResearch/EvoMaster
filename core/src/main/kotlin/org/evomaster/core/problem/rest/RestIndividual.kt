@@ -113,8 +113,10 @@ class RestIndividual(
         return when (filter) {
             GeneFilter.ALL -> seeAllActions().flatMap(Action::seeTopGenes)
             GeneFilter.NO_SQL -> seeActions(ActionFilter.NO_SQL).flatMap(Action::seeTopGenes)
-            GeneFilter.ONLY_SQL -> seeDbActions().flatMap(SqlAction::seeTopGenes)
+            GeneFilter.ONLY_SQL -> seeSqlDbActions().flatMap(SqlAction::seeTopGenes)
             GeneFilter.ONLY_MONGO -> seeMongoDbActions().flatMap(MongoDbAction::seeTopGenes)
+            GeneFilter.ONLY_DB -> seeActions(ONLY_DB).flatMap { it.seeTopGenes() }
+            GeneFilter.NO_DB -> seeActions(NO_DB).flatMap { it.seeTopGenes() }
             GeneFilter.ONLY_EXTERNAL_SERVICE -> seeExternalServiceActions().flatMap(ApiExternalServiceAction::seeTopGenes)
         }
     }
@@ -381,7 +383,7 @@ class RestIndividual(
 
 
     override fun getInsertTableNames(): List<String> {
-        return seeDbActions().filterNot { it.representExistingData }.map { it.table.name }
+        return seeSqlDbActions().filterNot { it.representExistingData }.map { it.table.name }
     }
 
     override fun seeMainExecutableActions(): List<RestCallAction> {

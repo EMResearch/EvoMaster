@@ -20,7 +20,7 @@ class FloatGeneTest : GeneImpactTest() {
         else
             geneToMutate.value += 1f
 
-        return MutatedGeneWithContext(previous = original, current = geneToMutate)
+        return MutatedGeneWithContext(current = geneToMutate, previous = original,)
     }
 
     override fun getGene(): Gene = FloatGene("i",  value= 1f)
