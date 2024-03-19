@@ -77,14 +77,14 @@ public class NumericConstraintSolverTest {
             } else if (gene.getName().equals("STOCK")) {
                 assertTrue(gene instanceof LongGene);
                 assertEquals(5, ((LongGene) gene).getValue());
-                assertNull(((LongGene) gene).getMin());
+                assertEquals(5, ((LongGene) gene).getMin());
                 assertEquals(9223372036854775807L, ((LongGene) gene).getMaximum());
                 assertTrue(((LongGene) gene).getMinInclusive());
                 assertTrue(((LongGene) gene).getMaxInclusive());
             } else if (gene.getName().equals("MIN_PRICE")) {
                 assertTrue(gene instanceof LongGene);
                 assertEquals(2, ((LongGene) gene).getValue());
-                assertNull(((LongGene) gene).getMin());
+                assertEquals(2, ((LongGene) gene).getMin());
                 assertEquals(9223372036854775807L, ((LongGene) gene).getMaximum());
                 assertTrue(((LongGene) gene).getMinInclusive());
                 assertTrue(((LongGene) gene).getMaxInclusive());

@@ -163,9 +163,8 @@ public class ConstraintSolverTest {
             if (gene.getName().equals("PRICE")) {
                 assertTrue(gene instanceof IntegerGene);
                 assertEquals(101, ((IntegerGene) gene).getValue());
-                // When using two constraints, the min for the gene is not parsed correctly
-                assertEquals(-2147483648, ((IntegerGene) gene).getMin());
-                assertEquals(2147483647, ((IntegerGene) gene).getMaximum());
+                assertEquals(101, ((IntegerGene) gene).getMin());
+                assertEquals(9998, ((IntegerGene) gene).getMaximum());
                 assertTrue(((IntegerGene) gene).getMinInclusive());
                 assertTrue(((IntegerGene) gene).getMaxInclusive());
             } else if (gene.getName().equals("STOCK")) {

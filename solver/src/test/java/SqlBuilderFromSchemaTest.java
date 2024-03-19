@@ -103,7 +103,7 @@ public class SqlBuilderFromSchemaTest {
 
     /**
      * When having a check constraint that contains an upper and lower bound,
-     * then the SqlInsertBuilder doesn't take them as min/max
+     * then the SqlInsertBuilder takes them as min/max
      */
     @Test
     public void minAndMaxIntInTheSameCheck() throws Exception {
@@ -118,8 +118,8 @@ public class SqlBuilderFromSchemaTest {
         assertEquals(1, genes.size());
 
         assertTrue(genes.get(0) instanceof IntegerGene);
-        assertEquals(-2147483648, ((IntegerGene) genes.get(0)).getMin());
-        assertEquals(2147483647, ((IntegerGene) genes.get(0)).getMaximum());
+        assertEquals(101, ((IntegerGene) genes.get(0)).getMin());
+        assertEquals(9998, ((IntegerGene) genes.get(0)).getMaximum());
     }
 
     /**
@@ -147,7 +147,8 @@ public class SqlBuilderFromSchemaTest {
     @Test
     public void bigIntToLongGene() throws Exception {
 
-        String schemaQuery = "CREATE TABLE products(price bigint not null);\n";
+        String schemaQuery = "CREATE TABLE products(price bigint not null);\n" +
+                "ALTER TABLE products add CHECK (price>100 AND price<9999);";
 
         List<SqlAction> newActions = getSqlActionsFromSchema(schemaQuery);
 
@@ -156,6 +157,8 @@ public class SqlBuilderFromSchemaTest {
         assertEquals(1, genes.size());
 
         assertTrue(genes.get(0) instanceof LongGene);
+        assertEquals(101, ((LongGene) genes.get(0)).getMin());
+        assertEquals(9998, ((LongGene) genes.get(0)).getMaximum());
     }
 
     /**
@@ -177,7 +180,7 @@ public class SqlBuilderFromSchemaTest {
 
     /**
      * When setting lower and upper bounds in a Long Column,
-     * Then they are not considered as min/max in the Gene
+     * Then they are considered as min/max in the gene
      */
     @Test
     public void setMinMaxInLongGene() throws Exception {
@@ -193,8 +196,8 @@ public class SqlBuilderFromSchemaTest {
         assertEquals(1, genes.size());
 
         assertTrue(genes.get(0) instanceof LongGene);
-        assertNull(((LongGene) genes.get(0)).getMin());
-        assertEquals(9223372036854775807L, ((LongGene) genes.get(0)).getMaximum());
+        assertEquals(101, ((LongGene) genes.get(0)).getMin());
+        assertEquals(9998, ((LongGene) genes.get(0)).getMaximum());
     }
 
     /**

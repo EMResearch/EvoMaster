@@ -86,8 +86,6 @@ public class SqlConditionTranslator implements SqlConditionVisitor<TableConstrai
         }
         // TODO This translation should be implemented
         throw new SqlCannotBeTranslatedException(e.toSql() + " cannot be translated yet");
-
-
     }
 
     private TableConstraint visit(SqlColumn leftColumn, SqlComparisonCondition e, SqlLiteralValue rightLiteral) {
@@ -95,26 +93,10 @@ public class SqlConditionTranslator implements SqlConditionVisitor<TableConstrai
         final String columnName = leftColumn.getColumnName();
         if (rightLiteral instanceof SqlBigIntegerLiteralValue) {
             long value = ((SqlBigIntegerLiteralValue) rightLiteral).getBigInteger().longValue();
-            switch (e.getSqlComparisonOperator()) {
-                case EQUALS_TO:
-                    return new RangeConstraint(tableName, columnName, value, value);
-
-                case GREATER_THAN:
-                    return new LowerBoundConstraint(tableName, columnName, value + 1);
-
-                case GREATER_THAN_OR_EQUAL:
-                    return new LowerBoundConstraint(tableName, columnName, value);
-
-                case LESS_THAN:
-                    return new UpperBoundConstraint(tableName, columnName, value - 1);
-
-                case LESS_THAN_OR_EQUAL:
-                    return new UpperBoundConstraint(tableName, columnName, value);
-
-                default:
-                    throw new UnsupportedOperationException(UNEXPECTED_COMPARISON_OPERATOR_MESSAGE + e.getSqlComparisonOperator());
-
-            }
+            return getTableConstraint(e, tableName, columnName, value);
+        } else if (rightLiteral instanceof SqlBigDecimalLiteralValue) {
+            // TODO: Handle this as a float
+            throw new UnsupportedOperationException("Unsupported Big Decimal literal " + rightLiteral);
         } else if (rightLiteral instanceof SqlStringLiteralValue) {
             SqlStringLiteralValue stringLiteralValue = (SqlStringLiteralValue) rightLiteral;
             if (e.getSqlComparisonOperator().equals(EQUALS_TO)) {
@@ -124,6 +106,29 @@ public class SqlConditionTranslator implements SqlConditionVisitor<TableConstrai
             }
         } else {
             throw new UnsupportedOperationException("Unsupported literal " + rightLiteral);
+        }
+    }
+
+    private TableConstraint getTableConstraint(SqlComparisonCondition e, String tableName, String columnName, long value) {
+        switch (e.getSqlComparisonOperator()) {
+            case EQUALS_TO:
+                return new RangeConstraint(tableName, columnName, value, value);
+
+            case GREATER_THAN:
+                return new LowerBoundConstraint(tableName, columnName, value + 1);
+
+            case GREATER_THAN_OR_EQUAL:
+                return new LowerBoundConstraint(tableName, columnName, value);
+
+            case LESS_THAN:
+                return new UpperBoundConstraint(tableName, columnName, value - 1);
+
+            case LESS_THAN_OR_EQUAL:
+                return new UpperBoundConstraint(tableName, columnName, value);
+
+            default:
+                throw new UnsupportedOperationException(UNEXPECTED_COMPARISON_OPERATOR_MESSAGE + e.getSqlComparisonOperator());
+
         }
     }
 
