@@ -266,10 +266,16 @@ class SecurityRest {
                 note, issue we have 2 different implementation, need to double-check
              */
 
+            // TODO Fix how to perform fitness function evaluation here.
+
             // Then evaluate the fitness function to create evaluatedIndividual
-            val fitness : FitnessFunction<RestIndividual> = RestFitness()
+            val fitness : FitnessFunction<RestIndividual> = RestResourceFitness()
 
             val evaluatedIndividual = fitness.computeWholeAchievedCoverageForPostProcessing(individualToAddToSuite)
+
+
+
+            val newTarget = this.archive.coveredTargets().max() + 1
 
             // add the evaluated individual to the archive
             if (evaluatedIndividual != null) {
