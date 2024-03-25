@@ -26,7 +26,7 @@ class WmOkHttpEMTest : SpringTestBase() {
 
             if updating WM to 2.34.0, the test fails on local windows as well (TO CHECK)
             */
-            CIUtils.skipIfOnGA()
+            //CIUtils.skipIfOnGA()
         }
     }
 
@@ -38,13 +38,19 @@ class WmOkHttpEMTest : SpringTestBase() {
             "WmOkHttpEM",
             "org.foo.WmOkHttpEM",
             500,
-            false,
+            true,
             { args: MutableList<String> ->
+
+                // TODO: When using actual domain name, Java tries to verify for the SSL certificate the
+                //  respective name, so generated tests fails.
+                //  PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 
                 args.add("--externalServiceIPSelectionStrategy")
                 args.add("USER")
                 args.add("--externalServiceIP")
                 args.add("127.0.0.12")
+                args.add("--minimize")
+                args.add("false")
 
                 val solution = initAndRun(args)
 

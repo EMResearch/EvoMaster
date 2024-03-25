@@ -23,7 +23,7 @@ class HarvestOptimisationEMTest: SpringTestBase() {
             val config = EMConfig()
             config.instrumentMR_NET = true
             initClass(HarvestOptimisationController(), config)
-            CIUtils.skipIfOnGA()
+            //CIUtils.skipIfOnGA()
         }
     }
 
@@ -55,7 +55,7 @@ class HarvestOptimisationEMTest: SpringTestBase() {
             "HarvestOptimisationEM",
             "org.foo.HarvestOptimisationEM",
             1000,
-            !CIUtils.isRunningGA(),
+                true,//!CIUtils.isRunningGA(),
             { args: MutableList<String> ->
 
                 args.add("--externalServiceIPSelectionStrategy")

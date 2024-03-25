@@ -35,7 +35,7 @@ class WmUrlOpenEMTest : SpringTestBase() {
             "WmUrlOpenEM",
             "org.foo.WmUrlOpenEM",
             500,
-            false,
+            true,
             { args: MutableList<String> ->
 
                 args.add("--externalServiceIPSelectionStrategy")
@@ -49,10 +49,10 @@ class WmUrlOpenEMTest : SpringTestBase() {
                 assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/wm/urlopen/string", "OK")
                 assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/wm/urlopen/sstring", "OK")
 
-                if(!CIUtils.isRunningGA()) {
+                //if(!CIUtils.isRunningGA()) {
                     //FIXME: this weird... fails on CI, even when incresing budget significantly... but passes local on all OS
                     assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/wm/urlopen/object", "OK")
-                }
+                //}
             },
             3,
         )

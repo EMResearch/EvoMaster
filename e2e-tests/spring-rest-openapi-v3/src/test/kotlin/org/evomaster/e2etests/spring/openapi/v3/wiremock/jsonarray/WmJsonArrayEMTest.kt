@@ -37,6 +37,8 @@ class WmJsonArrayEMTest : SpringTestBase() {
             true,
             { args: MutableList<String> ->
 
+                // Note: Test works on local machine without any problems.
+
                 args.add("--externalServiceIPSelectionStrategy")
                 args.add("USER")
                 args.add("--externalServiceIP")
@@ -46,11 +48,9 @@ class WmJsonArrayEMTest : SpringTestBase() {
 
                 assertTrue(solution.individuals.size >= 1)
 
-                if (!CIUtils.isRunningGA()) {
-                    //FIXME same issue as other WM tests... pass locally. Maybe should try again on CircleCI
-                    assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/wm/jsonarray", "OK X")
-                    assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/wm/jsonarray", "OK X and Y")
-                }
+                //FIXME same issue as other WM tests... pass locally. Maybe should try again on CircleCI
+                assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/wm/jsonarray", "OK X")
+                assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/wm/jsonarray", "OK X and Y")
             },
             3
         )

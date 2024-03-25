@@ -26,7 +26,7 @@ class WmHttpsOkHttp3EMTest : SpringTestBase() {
 
             if updating WM to 2.34.0, the test fails on local windows as well (TO CHECK)
             */
-            CIUtils.skipIfOnGA()
+            //CIUtils.skipIfOnGA()
         }
     }
 
@@ -38,7 +38,7 @@ class WmHttpsOkHttp3EMTest : SpringTestBase() {
             "WmHttpsOkHttp3EM",
             "org.foo.WmHttpsOkHttp3EM",
             500,
-            false,
+            true,
             { args: MutableList<String> ->
 
                 args.add("--externalServiceIPSelectionStrategy")

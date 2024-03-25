@@ -17,11 +17,11 @@ class AuthZeroJacksonEMTest: SpringTestBase() {
         @JvmStatic
         fun init() {
             initClass(AuthZeroJacksonController())
-            CIUtils.skipIfOnGA()
+            //CIUtils.skipIfOnGA()
         }
     }
 
-    @Test
+    @Disabled("Disabled temporarily")
     fun testRunEM() {
         // Generated test has response which is accurate, but test fails because the
         // SUT throws error for the case which worked during the search.

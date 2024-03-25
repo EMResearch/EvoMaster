@@ -9,13 +9,14 @@ import org.evomaster.client.java.instrumentation.shared.ExternalServiceSharedUti
 import org.evomaster.client.java.instrumentation.shared.ReplacementCategory;
 import org.evomaster.client.java.instrumentation.shared.ReplacementType;
 import org.evomaster.client.java.instrumentation.staticstate.ExecutionTracer;
+import org.evomaster.client.java.instrumentation.staticstate.MethodReplacementPreserveSemantics;
 
 import java.net.*;
 
 /**
  * InetAddress could be called directly, or indirectly from other JDK classes like Socket and URl.openConnection.
  * Recall that we do not instrument JDK classes, as those loaded by bootstrap classloader.
- *
+ * <p>
  * with socket connection, it will first do host lookup with java.net.InetAddress#getByName
  * if it does not exist, UnknownHostException will be thrown,
  * then the `socket.connect` cannot be reached.
@@ -46,14 +47,15 @@ public class InetAddressClassReplacement implements MethodReplacementClass {
             usageFilter = UsageFilter.ANY
     )
     public static InetAddress[] getAllByName(String host) throws UnknownHostException {
-        if(
+        if (
                 host == null
                         || host.isEmpty()
                         || ExternalServiceInfoUtils.isValidIP(host)
                         || ExecutionTracer.skipHostname(host)
                         || "localhost".equals(host)
+                        || MethodReplacementPreserveSemantics.shouldPreserveSemantics
 
-        ){
+        ) {
             //we are only interested in hostnames... recall user could manually specify some to skip.
             //we are never going to modify localhost though
             return InetAddress.getAllByName(host);
@@ -64,7 +66,7 @@ public class InetAddressClassReplacement implements MethodReplacementClass {
             return InetAddress.getAllByName(ip);
         }
 
-        try{
+        try {
             InetAddress[] inetAddress = InetAddress.getAllByName(host);
             // hostname is resolved
             ExecutionTracer.addHostnameInfo(new HostnameResolutionInfo(host, inetAddress[0].getHostAddress()));
@@ -80,7 +82,7 @@ public class InetAddressClassReplacement implements MethodReplacementClass {
               TODO this can be done in core directly, by checking presence of resolved HostnameResolutionInfo
             */
             return InetAddress.getAllByName(ExternalServiceSharedUtils.RESERVED_RESOLVED_LOCAL_IP);
-        } catch (UnknownHostException e){
+        } catch (UnknownHostException e) {
             //hostname is not resolved
             ExecutionTracer.addHostnameInfo(new HostnameResolutionInfo(host, null));
             throw e;

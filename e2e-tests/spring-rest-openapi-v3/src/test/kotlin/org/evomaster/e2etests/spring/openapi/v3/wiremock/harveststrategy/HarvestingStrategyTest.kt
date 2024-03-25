@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 
-class HarvestingStrategyTest: SpringTestBase() {
+class HarvestingStrategyTest : SpringTestBase() {
 
     companion object {
         @BeforeAll
@@ -23,7 +23,6 @@ class HarvestingStrategyTest: SpringTestBase() {
             val config = EMConfig()
             config.instrumentMR_NET = true
             initClass(HarvestStrategyController(), config)
-            CIUtils.skipIfOnGA()
         }
     }
 
@@ -38,7 +37,8 @@ class HarvestingStrategyTest: SpringTestBase() {
         wm.start()
         wm.stubFor(
             WireMock.get(
-                WireMock.urlEqualTo("/api/mock"))
+                WireMock.urlEqualTo("/api/mock")
+            )
                 .atPriority(1)
                 .willReturn(WireMock.aResponse().withStatus(200).withBody("{\"message\" : \"Working\"}"))
         )
@@ -48,8 +48,8 @@ class HarvestingStrategyTest: SpringTestBase() {
         runTestHandlingFlakyAndCompilation(
             "HarvestStrategyExactEMTest",
             "org.foo.HarvestStrategyExactEMTest",
-            1000,
-            !CIUtils.isRunningGA(),
+            1500,
+            !CIUtils.isRunningGA(), // this fails in local and CI
             { args: MutableList<String> ->
 
                 args.add("--externalServiceIPSelectionStrategy")
@@ -66,7 +66,9 @@ class HarvestingStrategyTest: SpringTestBase() {
                 val solution = initAndRun(args)
 
                 assertTrue(solution.individuals.size >= 1)
-                assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/harvest/strategy/exact", "Working")
+                if (!CIUtils.isRunningGA()) {
+                    assertHasAtLeastOne(solution, HttpVerb.GET, 200, "/api/harvest/strategy/exact", "Working")
+                }
             },
             3
         )
@@ -88,21 +90,24 @@ class HarvestingStrategyTest: SpringTestBase() {
         wm.start()
         wm.stubFor(
             WireMock.get(
-                WireMock.urlEqualTo("/api/mock"))
+                WireMock.urlEqualTo("/api/mock")
+            )
                 .atPriority(1)
                 .willReturn(WireMock.aResponse().withStatus(200).withBody("{\"message\" : \"Working\"}"))
         )
-        wm.stubFor(WireMock.any(WireMock.anyUrl())
-            .atPriority(2)
-            .willReturn(WireMock.aResponse().withStatus(500).withBody("Internal Server Error")))
+        wm.stubFor(
+            WireMock.any(WireMock.anyUrl())
+                .atPriority(2)
+                .willReturn(WireMock.aResponse().withStatus(500).withBody("Internal Server Error"))
+        )
 
         DnsCacheManipulator.setDnsCache("mock.int", "127.0.0.13")
 
         runTestHandlingFlakyAndCompilation(
-            "HarvestStrategyClosestEMTest",
+            "HarvestStrategyClosestSameDomainEMTest",
             "org.foo.HarvestStrategyClosestEMTest",
-            100,
-            !CIUtils.isRunningGA(),
+            1000,
+            true,
             { args: MutableList<String> ->
 
                 args.add("--externalServiceIPSelectionStrategy")

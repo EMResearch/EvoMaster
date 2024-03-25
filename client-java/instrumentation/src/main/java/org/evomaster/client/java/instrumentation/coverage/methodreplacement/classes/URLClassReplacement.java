@@ -7,6 +7,7 @@ import org.evomaster.client.java.instrumentation.coverage.methodreplacement.*;
 import org.evomaster.client.java.distance.heuristics.Truthness;
 import org.evomaster.client.java.instrumentation.shared.*;
 import org.evomaster.client.java.instrumentation.staticstate.ExecutionTracer;
+import org.evomaster.client.java.instrumentation.staticstate.MethodReplacementPreserveSemantics;
 import org.evomaster.client.java.utils.SimpleLogger;
 
 import java.net.*;
@@ -143,6 +144,9 @@ public class URLClassReplacement implements MethodReplacementClass {
     }
 
     private static URL getReplacedURL(URL caller) throws java.io.IOException {
+        if (MethodReplacementPreserveSemantics.shouldPreserveSemantics) {
+            return null;
+        }
         String protocol = caller.getProtocol();
 
         int port = caller.getPort();

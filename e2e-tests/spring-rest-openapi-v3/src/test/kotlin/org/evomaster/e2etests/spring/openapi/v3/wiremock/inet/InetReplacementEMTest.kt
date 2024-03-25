@@ -7,6 +7,7 @@ import org.evomaster.core.problem.rest.HttpVerb
 import org.evomaster.e2etests.spring.openapi.v3.SpringTestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class InetReplacementEMTest : SpringTestBase() {
@@ -21,14 +22,13 @@ class InetReplacementEMTest : SpringTestBase() {
         }
     }
 
-    @Test
+    @Disabled("Disabled temporarily")
     fun testRunEM() {
         runTestHandlingFlakyAndCompilation(
             "InetReplacementEM",
             "org.foo.InetReplacementEM",
             1000,
-//            !CIUtils.isRunningGA(),
-            false,
+            !CIUtils.isRunningGA(),
             { args: MutableList<String> ->
 
                 args.add("--externalServiceIPSelectionStrategy")

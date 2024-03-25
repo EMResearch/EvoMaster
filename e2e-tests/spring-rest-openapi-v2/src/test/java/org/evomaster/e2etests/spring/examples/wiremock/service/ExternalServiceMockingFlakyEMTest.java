@@ -36,7 +36,7 @@ public class ExternalServiceMockingFlakyEMTest extends SpringTestBase {
                 "ExternalServiceMockingEMGeneratedTest",
                 "org.bar.ExternalServiceMockingEMGeneratedTest",
                 1500,
-                !CIUtils.isRunningGA(),
+                true,//!CIUtils.isRunningGA(),
                 (args) -> {
 
                     // IP set to 127.0.0.5 to confirm the test failure
