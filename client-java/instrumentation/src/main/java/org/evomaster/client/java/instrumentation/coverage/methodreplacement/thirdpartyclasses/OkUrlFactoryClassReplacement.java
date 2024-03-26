@@ -8,6 +8,7 @@ import org.evomaster.client.java.instrumentation.coverage.methodreplacement.Usag
 import org.evomaster.client.java.instrumentation.shared.ReplacementCategory;
 import org.evomaster.client.java.instrumentation.shared.ReplacementType;
 import org.evomaster.client.java.instrumentation.staticstate.ExecutionTracer;
+import org.evomaster.client.java.instrumentation.staticstate.MethodReplacementPreserveSemantics;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -75,6 +76,10 @@ public class OkUrlFactoryClassReplacement extends ThirdPartyMethodReplacementCla
     }
 
     private static URL getReplacedURL(URL url){
+        if (MethodReplacementPreserveSemantics.shouldPreserveSemantics) {
+            return url;
+        }
+
         URL replaced = url;
         if ((url.getProtocol().equalsIgnoreCase("https") || url.getProtocol().equalsIgnoreCase("http"))
                 && !skipHostnameOrIp(url.getHost())
