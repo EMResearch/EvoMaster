@@ -3,19 +3,24 @@ package org.evomaster.core.problem.rest
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.parser.OpenAPIV3Parser
 import io.swagger.v3.parser.core.models.SwaggerParseResult
+import org.evomaster.core.problem.api.param.Param
+import org.evomaster.core.problem.enterprise.auth.AuthenticationInfo
+import org.evomaster.core.problem.httpws.auth.HttpWsAuthenticationInfo
+import org.evomaster.core.problem.httpws.auth.HttpWsNoAuth
+import org.evomaster.core.problem.rest.service.RestActionUtils
 import org.evomaster.core.remote.SutProblemException
 import java.net.ConnectException
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Paths
-import javax.ws.rs.client.ClientBuilder
-import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
 
 /**
  * Created by arcuri82 on 22-Jan-20.
  */
 object OpenApiAccess {
+
+    const val UNAUTHORIZED_SCHEMA_ACCESS : String = "UNAUTHORIZED_SCHEMA_ACCESS"
 
     fun getOpenApi(schemaText: String): OpenAPI {
 
@@ -36,24 +41,38 @@ object OpenApiAccess {
                 ?: throw SutProblemException("Failed to parse OpenApi schema: " + parseResults.messages.joinToString("\n"))
     }
 
-    fun getOpenAPIFromURL(openApiUrl: String): OpenAPI {
+    fun getOpenAPIFromURL(openApiUrl: String, authentication : AuthenticationInfo = HttpWsNoAuth() ): OpenAPI {
 
         //could be either JSON or YAML
        val data = if(openApiUrl.startsWith("http", true)){
-           readFromRemoteServer(openApiUrl)
+           readFromRemoteServer(openApiUrl, authentication)
        } else {
            readFromDisk(openApiUrl)
        }
 
+        // if the swagger could not be retrieved, throw SutException
+        if (data == UNAUTHORIZED_SCHEMA_ACCESS) {
+            throw SutProblemException("Swagger could not be accessed because access to the swagger with " +
+                    "the authentication information: " + authentication.toString() + " was denied.")
+
+        }
+
         return getOpenApi(data)
     }
 
-    private fun readFromRemoteServer(openApiUrl: String) : String{
-        val response = connectToServer(openApiUrl, 10)
+    private fun readFromRemoteServer(openApiUrl: String, authentication : AuthenticationInfo) : String{
+        val response = connectToServer(openApiUrl, authentication, 10)
 
         val body = response.readEntity(String::class.java)
 
-        if (response.statusInfo.family != Response.Status.Family.SUCCESSFUL) {
+        // check for status code 401 or 403
+        if (response.status == 401 || response.status == 403) {
+            throw SutProblemException("Swagger could not be accessed because access to the swagger with " +
+                    "the authentication information: " + authentication.toString() + " was denied.")
+        }
+        // if the problem is not due to not being able to access to an authenticated swagger,
+        // just throw an exception and show the status and body
+        else if (response.statusInfo.family != Response.Status.Family.SUCCESSFUL) {
             throw SutProblemException("Cannot retrieve OpenAPI schema from $openApiUrl ," +
                     " status=${response.status} , body: $body")
         }
@@ -91,14 +110,18 @@ object OpenApiAccess {
         return path.toFile().readText()
     }
 
-    private fun connectToServer(openApiUrl: String, attempts: Int): Response {
+    private fun connectToServer(openApiUrl: String, authentication : AuthenticationInfo, attempts: Int): Response {
 
         for (i in 0 until attempts) {
             try {
-                return ClientBuilder.newClient()
-                        .target(openApiUrl)
-                        .request(MediaType.APPLICATION_JSON_TYPE)
-                        .get()
+
+                val swaggerCallAction = RestCallAction("swaggerRetrieve", HttpVerb.GET, RestPath("/v2/api-docs"),
+                    mutableListOf<Param>())
+
+                swaggerCallAction.auth = authentication as HttpWsAuthenticationInfo
+
+                return RestActionUtils.handleSimpleRestCallForSwagger(swaggerCallAction, openApiUrl)
+
             } catch (e: Exception) {
 
                 if (e.cause is ConnectException) {

@@ -4,6 +4,7 @@ import com.foo.rest.examples.spring.endpointfocusandprefix.EndpointFocusAndPrefi
 
 import org.evomaster.ci.utils.JUnitExtra;
 import org.evomaster.core.config.ConfigProblemException;
+import org.evomaster.core.problem.httpws.auth.HttpWsNoAuth;
 import org.evomaster.core.problem.rest.HttpVerb;
 import org.evomaster.core.problem.rest.OpenApiAccess;
 import org.evomaster.core.problem.rest.RestIndividual;
@@ -61,7 +62,7 @@ public class EndpointFocusAndPrefixTest extends SpringTestBase {
                     assertAllSolutionsHavePathFocusOrPrefixList(solution, pathsToCheck, false);
 
                     // get all paths from the swagger
-                    OpenAPI swagger = OpenApiAccess.INSTANCE.getOpenAPIFromURL(baseUrlOfSut + "/v2/api-docs");
+                    OpenAPI swagger = OpenApiAccess.INSTANCE.getOpenAPIFromURL(baseUrlOfSut + "/v2/api-docs", new HttpWsNoAuth());
 
                     // api paths
                     Paths apiPaths = swagger.getPaths();

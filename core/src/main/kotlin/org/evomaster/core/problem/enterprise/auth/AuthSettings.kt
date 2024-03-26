@@ -37,6 +37,8 @@ class AuthSettings(authInfos: List<AuthenticationInfo> = listOf()) {
 
     fun size() = auths.size
 
+    fun getFirstAuthentication() = auths.first()
+
     fun <T : AuthenticationInfo> size(klass: Class<T>) = auths.count{ klass.isAssignableFrom(it.javaClass) }
 
     fun <T : AuthenticationInfo> getDifferentOne(name: String, klass: Class<T>, randomness: Randomness) : T {
