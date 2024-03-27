@@ -559,7 +559,7 @@ abstract class AbstractRestFitness : HttpWsFitness<RestIndividual>() {
             }
         }
 
-        if (response.status == 401 && a.auth !is NoAuth) {
+        if (response.status == 401 && a.auth !is NoAuth && !a.auth.requireMockHandling) {
             /*
                 if the endpoint itself is to get auth info, we might exclude auth check for it
                 eg,

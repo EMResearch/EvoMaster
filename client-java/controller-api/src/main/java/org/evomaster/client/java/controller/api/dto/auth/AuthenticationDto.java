@@ -16,6 +16,16 @@ public class AuthenticationDto {
     public String name;
 
     /**
+     * Specify that the authentication for this user requires setting up mock responses from external services
+     * in the API.
+     * This will be done as part of the fuzzing, although only possible for white-box testing.
+     *
+     * One consequence here is that, even if we provide correct auth info as input, then a request might still
+     * fail due to unauthorized access if the fuzzing process does not properly set up these mocked responses in the API itself.
+     */
+    public Boolean requireMockHandling;
+
+    /**
      * The headers needed for authentication.
      * This is used to represent cases in which auth info is static/fixed,
      * eg when passing an id or username/password through a HTTP header (and not

@@ -24,7 +24,8 @@ open class HttpWsAuthenticationInfo(
      * Represent call done to a login endpoint, from which a token or cookie is extracted
      * for auth in following requests.
      */
-    val endpointCallLogin: EndpointCallLogin?
+    val endpointCallLogin: EndpointCallLogin?,
+    val requireMockHandling: Boolean
 ): AuthenticationInfo(name) {
 
     init {
@@ -65,7 +66,9 @@ open class HttpWsAuthenticationInfo(
                 null
             }
 
-           return HttpWsAuthenticationInfo(dto.name.trim(), headers, endpointCallLogin)
+            val requireMockHandling = dto.requireMockHandling != null && dto.requireMockHandling
+
+           return HttpWsAuthenticationInfo(dto.name.trim(), headers, endpointCallLogin, requireMockHandling)
         }
     }
 
