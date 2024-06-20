@@ -5,9 +5,11 @@ package org.evomaster.core.problem.enterprise.auth
  */
 abstract class AuthenticationInfo(
     /**
-     * name of the Authentication
+     * name of the Authentication.
+     * this must be unique
      */
-    val name: String){
+    val name: String
+){
 
 
     init {
@@ -15,4 +17,11 @@ abstract class AuthenticationInfo(
             throw IllegalArgumentException("Blank name")
         }
     }
+
+    /**
+     * For auth info, names are unique.
+     * so, 2 auths are technically different as long as have different names.
+     * this forced in [AuthSettings]
+     */
+    fun isDifferentFrom(other: AuthenticationInfo) = this.name != other.name
 }

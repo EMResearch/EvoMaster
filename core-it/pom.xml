@@ -89,10 +89,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springdoc</groupId>-->
-<!--            <artifactId>springdoc-openapi-security</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-kotlin</artifactId>
@@ -108,6 +104,8 @@
             <type>test-jar</type>
             <version>${project.version}</version>
         </dependency>
+
+
 
     </dependencies>
 

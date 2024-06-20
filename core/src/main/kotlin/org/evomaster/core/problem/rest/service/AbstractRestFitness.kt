@@ -8,6 +8,7 @@ import org.evomaster.client.java.controller.api.dto.TestResultsDto
 import org.evomaster.client.java.instrumentation.shared.ExternalServiceSharedUtils
 import org.evomaster.core.Lazy
 import org.evomaster.core.logging.LoggingUtil
+import org.evomaster.core.problem.enterprise.SampleType
 import org.evomaster.core.problem.externalservice.HostnameResolutionAction
 import org.evomaster.core.problem.externalservice.HostnameResolutionInfo
 import org.evomaster.core.problem.externalservice.httpws.service.HarvestActualHttpWsResponseHandler
@@ -840,8 +841,26 @@ abstract class AbstractRestFitness : HttpWsFitness<RestIndividual>() {
             recordResponseData(individual, actionResults.filterIsInstance<RestCallResult>())
         }
 
+        if(config.security && individual.sampleType == SampleType.SECURITY){
+            analyzeSecurityProperties(individual,actionResults,fv)
+        }
+
         return dto
     }
+
+    private fun analyzeSecurityProperties(
+            individual: RestIndividual,
+            actionResults: List<ActionResult>,
+            fv: FitnessValue
+    ){
+        //TODO the other cases
+        val fault = RestSecurityOracle.handleForbiddenDelete(individual,actionResults)
+        if(fault != null){
+            val scenarioId = idMapper.handleLocalTarget(fault)
+            fv.updateTarget(scenarioId, 1.0)
+        }
+    }
+
 
     protected fun recordResponseData(individual: RestIndividual, actionResults: List<RestCallResult>) {
 

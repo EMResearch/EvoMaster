@@ -523,4 +523,39 @@ internal class RestPathTest{
         assertTrue(rootFooBar.isSiblingForPreparingResource(rootFooBarPath))
     }
 
+    @Test
+    fun testParent(){
+
+        val path = RestPath("/api/users/{id}/balance/")
+        assertFalse(path.isRoot())
+
+        var parent =  path.parentPath()
+        assertEquals("/api/users/{id}/balance", parent.toString())
+
+        parent = parent.parentPath()
+        assertEquals("/api/users/{id}", parent.toString())
+
+        parent = parent.parentPath()
+        assertEquals("/api/users", parent.toString())
+
+        parent = parent.parentPath()
+        assertEquals("/api", parent.toString())
+
+        parent = parent.parentPath()
+        assertEquals("/", parent.toString())
+        assertTrue(parent.isRoot())
+    }
+
+    @Test
+    fun testResolveOnlyPathNoParam(){
+
+        val x = "/api/foo/bar/"
+        val resolvedX = RestPath(x).resolveOnlyPath(listOf())
+        assertEquals(x, resolvedX)
+
+        val y = "/"
+        val resolvedY = RestPath(y).resolveOnlyPath(listOf())
+        assertEquals(y, resolvedY)
+    }
+
 }

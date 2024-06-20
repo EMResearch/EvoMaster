@@ -84,17 +84,19 @@ class RestPath(path: String) {
             throw IllegalArgumentException("Empty path definition")
         }
 
-        endsWithSlash = path.endsWith("/")
+        endsWithSlash = path.endsWith("/") && path != "/"
 
         elements = path.split("/")
             .filter { it.isNotBlank() }
             .map { extractElement(it) }
 
-        computedToString = "/" + elements.joinToString("/") + if(endsWithSlash) "/" else ""
+        computedToString = doComputeToString(elements, endsWithSlash)
 
         nameQualifier = computeNameQualifier()
     }
 
+    private fun doComputeToString(elements: List<Element>, endsWithSlash : Boolean)
+        = "/" + elements.joinToString("/") + if(endsWithSlash) "/" else ""
 
     private fun extractElement(s: String): Element {
 
@@ -360,6 +362,11 @@ class RestPath(path: String) {
             path.append("/")
         }
 
+        if(path.isEmpty()){
+            //handle root, in case elements is empty and no / is added
+            path.append("/")
+        }
+
         return URI(null, null, path.toString(), null, null).rawPath
     }
 
@@ -503,5 +510,21 @@ class RestPath(path: String) {
         }
 
         return noQualifier
+    }
+
+    fun isRoot() = levels() == 0
+
+    fun parentPath() : RestPath {
+        if(isRoot()){
+            throw IllegalStateException("Root has no parent")
+        }
+
+        if(endsWithSlash){
+            return RestPath(doComputeToString(elements, false))
+        }
+
+        val reduced = elements.subList(0, elements.lastIndex)
+        val path = doComputeToString(reduced, false)
+        return RestPath(path)
     }
 }

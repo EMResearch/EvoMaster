@@ -27,7 +27,10 @@ abstract class IntegrationTestRestBase : RestTestBase() {
     fun getPirToRest() = injector.getInstance(PirToRest::class.java)
 
 
-    fun createIndividual(actions: List<RestCallAction>): EvaluatedIndividual<RestIndividual> {
+    /**
+     * Modified by Onur to be able to create an individual with a given sample type.
+     */
+    fun createIndividual(actions: List<RestCallAction>, sampleT : SampleType = SampleType.SEEDED): EvaluatedIndividual<RestIndividual> {
 
 //        val searchGlobalState = injector.getInstance(SearchGlobalState::class.java)
 
@@ -40,11 +43,12 @@ abstract class IntegrationTestRestBase : RestTestBase() {
             in this case, the sampler is an instance of ResourceSampler,
             then check its implementation in ResourceSampler.createIndividual(...)
          */
-        val ind = sampler.createIndividual(SampleType.SEEDED, actions.toMutableList())
+        val ind = sampler.createIndividual(sampleT, actions.toMutableList())
 
         val ff = injector.getInstance(AbstractRestFitness::class.java)
         val ei = ff.calculateCoverage(ind)!!
 
         return ei
     }
+
 }

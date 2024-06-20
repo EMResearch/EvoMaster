@@ -941,22 +941,20 @@ class TestCaseWriterTest {
     }
 
     @Test
-    fun testVarGeneration(){
-        //TODO: this needs a rename
+    fun testRootTryCatchTimedout(){
         val format = OutputFormat.JAVA_JUNIT_4
 
         val baseUrlOfSut = "baseUrlOfSut"
-        val sampleType = SampleType.RANDOM
         val action = RestCallAction("1", HttpVerb.GET, RestPath("/"), mutableListOf())
         val restActions = listOf(action).toMutableList()
-        val individual = RestIndividual(restActions, sampleType)
+        val individual = RestIndividual(restActions, SampleType.RANDOM)
         TestUtils.doInitializeIndividualForTesting(individual)
 
         val fitnessVal = FitnessValue(0.0)
         val result = RestCallResult(action.getLocalId())
         result.setTimedout(timedout = true)
         val results = listOf(result)
-        val ei = EvaluatedIndividual<RestIndividual>(fitnessVal, individual, results)
+        val ei = EvaluatedIndividual(fitnessVal, individual, results)
         val config = getConfig(format)
         config.expectationsActive = true
 

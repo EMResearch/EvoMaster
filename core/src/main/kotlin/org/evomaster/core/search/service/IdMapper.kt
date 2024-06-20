@@ -138,6 +138,10 @@ class IdMapper {
         fun isLocal(id: Int): Boolean = id < 0
 
         fun isMethodReplacementTarget(descriptiveId: String) = descriptiveId.startsWith(ObjectiveNaming.METHOD_REPLACEMENT)
+
+        fun getFaultDescriptiveIdSecurity(postfix: String): String {
+            return FAULT_DESCRIPTIVE_ID_PREFIX + "SECURITY_" + postfix
+        }
     }
 
     private val mapping: MutableMap<Int, String> = mutableMapOf()

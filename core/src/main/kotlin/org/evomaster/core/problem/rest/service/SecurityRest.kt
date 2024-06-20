@@ -14,6 +14,7 @@ import org.evomaster.core.problem.rest.resource.RestResourceCalls
 
 import org.evomaster.core.search.*
 import org.evomaster.core.search.service.Archive
+import org.evomaster.core.search.service.IdMapper
 import org.evomaster.core.search.service.Randomness
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -42,6 +43,12 @@ class SecurityRest {
 
     @Inject
     private lateinit var fitness: RestFitness
+
+    @Inject
+    private lateinit var idMapper: IdMapper
+
+    @Inject
+    private lateinit var builder: RestIndividualBuilder
 
     /**
      * All actions that can be defined from the OpenAPI schema
@@ -199,7 +206,7 @@ class SecurityRest {
                 )
 
                 // slice the individual in a way that delete all calls after the DELETE request
-                individualToChooseForTest = RestIndividualSelectorUtils.sliceAllCallsInIndividualAfterAction(
+                individualToChooseForTest = builder.sliceAllCallsInIndividualAfterAction(
                     currentIndividualWith403.individual,
                     deleteActionIndex
                 )
@@ -247,11 +254,12 @@ class SecurityRest {
                 }
 
                 //start from base test in which resource is created
-                val (creationIndividual, creationEndpoint) = RestIndividualSelectorUtils.findIndividualWithEndpointCreationForResource(
-                    individualsInSolution,
-                    delete.path,
-                    true
-                ) ?: return@forEach
+                val (creationIndividual, creationEndpoint) = RestIndividualSelectorUtils
+                    .findIndividualWithEndpointCreationForResource(
+                        individualsInSolution,
+                        delete.path,
+                        true
+                    ) ?: return@forEach
 
                 // find the index of the creation action
                 val actionIndexForCreation = creationIndividual.individual.getActionIndex(
@@ -262,7 +270,7 @@ class SecurityRest {
                 assert(creationAction.auth !is NoAuth)
 
                 //we don't need anything after the creation action
-                val sliced = RestIndividualSelectorUtils.sliceAllCallsInIndividualAfterAction(
+                val sliced = builder.sliceAllCallsInIndividualAfterAction(
                     creationIndividual.individual,
                     actionIndexForCreation
                 )
@@ -274,17 +282,11 @@ class SecurityRest {
                 deleteAction.resetLocalId()
                 deleteAction.auth = authSettings.getDifferentOne(creationAction.auth.name, HttpWsAuthenticationInfo::class.java, randomness)
 
-                //TODO bind to same path as creation action
-                /*
-                    for now let's bind just to a PUT.
-                    We need to create "links" when dealing with POST creating new ids
-                    TODO this would be part anyway of ongoing refactoring of BB testing
-                 */
+
                 if(creationEndpoint.path.isEquivalent(delete.path)){
                     deleteAction.bindBasedOn(creationAction.path, creationAction.parameters.filterIsInstance<PathParam>(),null)
                 } else {
-                    //TODO. eg POST on ancestor path
-                    return@forEach
+                   builder.linkDynamicCreateResource(creationAction,deleteAction)
                 }
 
                 sliced.addResourceCall(restCalls = RestResourceCalls(actions = mutableListOf(deleteAction), sqlActions = listOf()))
@@ -341,19 +343,25 @@ class SecurityRest {
                         return@forEach
                     }
 
-                    //now we can finally ask, is there a problem with last call?
-
-                    //TODO new testing targets
                     /*
-                        FIXME: if we do it only here, then we would lose this info if the test case is re-evaluated
-                        for any reason... eg, in minimizer
-                        need to think of a good, general solution...
+                        now we can finally ask, is there a problem with last call?
+                        if so, this should had already been handled in the fitness function.
+                        regardless, we still need to create a new testing target, regardless of whether a fault
+                        is found or not, otherwise this test will be lost.
+                        if no fault is found, this kind of test is good for regression.
 
-                        TODO let's do it directly in the fitness function, with new security test oracle
+                        note: we do not compute fault here because, if we do it only here,
+                        then we would lose this info if the test case is re-evaluated
+                        for any reason... eg, in minimizer
                      */
 
+                    val scenarioId = idMapper.handleLocalTarget("security:forbiddenDelete:${delete.path}")
+                    evaluatedIndividual.fitness.updateTarget(scenarioId, 1.0)
+
                     // add the evaluated individual to the archive
-                    archive.addIfNeeded(evaluatedIndividual)
+                    val added = archive.addIfNeeded(evaluatedIndividual)
+                    //if we arrive here, should always be added, because we are creating a new testing target
+                    assert(added)
                 }
             }
         }

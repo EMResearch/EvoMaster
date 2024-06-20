@@ -66,7 +66,7 @@ object RestIndividualSelectorUtils {
     ): RestCallAction? {
 
         return findEvaluatedAction(individualsInSolution,verb,path,status,statusGroup,authenticated)
-            ?.action as RestCallAction
+            ?.action as RestCallAction?
     }
 
 
@@ -145,18 +145,11 @@ object RestIndividualSelectorUtils {
                                                        mustBeAuthenticated: Boolean
     ) : Pair<EvaluatedIndividual<RestIndividual>,Endpoint>?{
 
-        //TODO needs finishing implementation
-
-        // there is not. need to create it based on successful create resources with authenticated user
-        lateinit var verbUsedForCreation : HttpVerb
-        // search for create resource for endpoint of DELETE using PUT
-        lateinit var existingEndpointForCreation : EvaluatedIndividual<RestIndividual>
-
         val existingPuts  = findIndividuals(
             individuals,
             HttpVerb.PUT,
             resourcePath,
-            201,
+            201, //if PUT, must be 201
             statusGroup = null,
             mustBeAuthenticated
         )
@@ -167,40 +160,30 @@ object RestIndividualSelectorUtils {
                 Endpoint(HttpVerb.PUT, resourcePath)
             )
         }
-        // if not, search for a
-        else {
-            // TODO since we cannot search for a POST with the same path, we can just return null
+
+        if(resourcePath.isRoot()){
             return null
         }
 
-        /*
+        val parent = resourcePath.parentPath()
 
-        lateinit var existingPostReqForEndpointOfDelete : List<EvaluatedIndividual<RestIndividual>>
+        val existingPosts = findIndividuals(
+            individuals,
+            HttpVerb.POST, // it is not uncommon to give a 200 even if creating new resource
+            parent,
+            statusGroup = StatusGroup.G_2xx,
+            authenticated = mustBeAuthenticated
+        )
 
-        if (existingPutForEndpointOfDelete.isNotEmpty()) {
-            existingEndpointForCreation = existingPutForEndpointOfDelete[0]
-            verbUsedForCreation = HttpVerb.PUT
-        }
-        else {
-            // if there is no such, search for an existing POST
-            existingPostReqForEndpointOfDelete = RestIndividualSelectorUtils.getIndividualsWithActionAndStatusGroup(
-                individualsInSolution,
-                HttpVerb.POST,
-                delete.path,  // FIXME might be a parent, eg POST:/users for DELETE:/users/{id} . BUT CHECK FOR PATH STRUCTURE
-                "2xx"
+        if(existingPosts.isNotEmpty()){
+            return Pair(
+                existingPosts.sortedBy { it.individual.size() }[0],
+                Endpoint(HttpVerb.POST, resourcePath)
             )
-
-            if (existingPostReqForEndpointOfDelete.isNotEmpty()) {
-                existingEndpointForCreation = existingPostReqForEndpointOfDelete[0]
-                verbUsedForCreation = HttpVerb.DELETE
-            }
-
         }
 
-
+        //found nothing
         return null
-
-         */
     }
 
 

@@ -162,14 +162,31 @@ class RestIndividualBuilder {
             Once the create is fully initialized, need to fix
             links with target
          */
-        if (!create.path.isEquivalent(target.path)) {
+        linkDynamicCreateResource(create, target)
+
+        return true
+    }
+
+    /**
+     * Given two actions in sequence, [before] and [after], setup a creation link.
+     * This means that [before] is supposed to create a resource dynamically, which is then used
+     * by [after].
+     * eg:
+     * before: POST   /products
+     * after:  DELETE /products/{id}
+     */
+    fun linkDynamicCreateResource(
+        before: RestCallAction,
+        after: RestCallAction
+    ) {
+        if (!before.path.isEquivalent(after.path)) {
             /*
                 eg
                 POST /x
                 GET  /x/{id}
              */
-            create.saveLocation = true
-            target.usePreviousLocationId = create.postLocationId()
+            before.saveLocation = true
+            after.usePreviousLocationId = before.postLocationId()
         } else {
             /*
                 eg
@@ -182,14 +199,12 @@ class RestIndividualBuilder {
                 PUT /x/{id}
                 GET /x/{id}
              */
-            create.saveLocation = false
+            before.saveLocation = false
 
             // the target (eg GET) needs to use the location of first POST, or more correctly
             // the same location used for the last POST (in case there is a deeper chain)
-            target.usePreviousLocationId = create.usePreviousLocationId
+            after.usePreviousLocationId = before.usePreviousLocationId
         }
-
-        return true
     }
 
 

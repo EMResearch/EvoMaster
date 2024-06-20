@@ -7,10 +7,8 @@ import org.evomaster.core.output.auth.TokenWriter
 import org.evomaster.core.problem.enterprise.auth.NoAuth
 import org.evomaster.core.problem.graphql.GraphQLAction
 import org.evomaster.core.problem.httpws.HttpWsAction
-import org.evomaster.core.problem.httpws.service.HttpWsFitness
 import org.evomaster.core.problem.rest.ContentType
 import org.evomaster.core.problem.rest.RestCallAction
-import org.evomaster.core.problem.rest.service.AbstractRestFitness
 import org.evomaster.core.search.Individual
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -219,4 +217,6 @@ object AuthUtils {
         }
         return true
     }
+
+
 }
