@@ -118,7 +118,7 @@
         <redirectTestOutputToFile>true</redirectTestOutputToFile>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <kotlin.version>1.8.20</kotlin.version>
+        <kotlin.version>2.0.0</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <junit.jupiter.version>5.7.2</junit.jupiter.version>
         <junit.platform.version>1.7.2</junit.platform.version>
