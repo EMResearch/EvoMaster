@@ -16,6 +16,7 @@ import org.evomaster.client.java.sql.advanced.AdvancedHeuristic;
 import org.evomaster.client.java.sql.advanced.driver.Schema;
 import org.evomaster.client.java.sql.advanced.driver.SqlDriver;
 import org.evomaster.client.java.sql.advanced.driver.cache.ConcurrentCache;
+import org.evomaster.client.java.sql.advanced.helpers.dump.PlainTextFileHelper;
 import org.evomaster.client.java.utils.SimpleLogger;
 
 import java.sql.Connection;
@@ -24,6 +25,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static java.lang.Double.MAX_VALUE;
 import static java.util.Objects.isNull;
 import static org.evomaster.client.java.sql.advanced.AdvancedHeuristic.createAdvancedHeuristic;
 import static org.evomaster.client.java.sql.advanced.driver.Schema.createSchema;
@@ -209,7 +211,7 @@ public class SqlHandler {
     }
 
     private double maxDistance() {
-        return isAdvancedHeuristics() ? 1d : Double.MAX_VALUE;
+        return isAdvancedHeuristics() ? 1d : MAX_VALUE;
     }
 
     private Double computeDistance(String command) {
@@ -234,7 +236,7 @@ public class SqlHandler {
             even if columns.isEmpty(), we need to check if any data was present
          */
 
-        double dist;
+        double dist = MAX_VALUE;
         if (columns.isEmpty()) {
             //TODO check if table(s) not empty, and give >0 otherwise
             dist = 0;
@@ -245,8 +247,30 @@ public class SqlHandler {
                     SqlDriver sqlDriver = createSqlDriver(connection, schema, new ConcurrentCache());
                     advancedHeuristic = createAdvancedHeuristic(sqlDriver, taintHandler);
                 }
-                Truthness truthness = advancedHeuristic.calculate(command);
-                dist = 1 - truthness.getOfTrue();
+                boolean advancedDistanceIsMax = false;
+                boolean standardDistanceIsMax = false;
+                try {
+                    Truthness truthness = advancedHeuristic.calculate(command);
+                    if(truthness.equals(Truthness.FALSE)){
+                        advancedDistanceIsMax = true;
+                    }
+                    dist = 1 - truthness.getOfTrue();
+                } catch (Exception e){
+                    advancedDistanceIsMax = true;
+                }
+                try {
+                    double standardDistance = getDistanceForWhere(command, columns);
+                    if(standardDistance == MAX_VALUE){
+                        standardDistanceIsMax = true;
+                    }
+                } catch (Exception e){
+                    standardDistanceIsMax = true;
+                }
+                if(standardDistanceIsMax && !advancedDistanceIsMax){
+                    PlainTextFileHelper.append("only_supported_by_advanced.txt", command.concat("\n\n"));
+                } else if(!standardDistanceIsMax && advancedDistanceIsMax) {
+                    PlainTextFileHelper.append("only_supported_by_standard.txt", command.concat("\n\n"));
+                }
             } else {
                 dist = getDistanceForWhere(command, columns);
             }
