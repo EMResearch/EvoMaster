@@ -184,6 +184,10 @@ public class RPCEndpointsBuilder {
 
         try {
             if (dbDto != null){
+
+                if(dbDto.commandName == null)
+                    throw new IllegalArgumentException("For MockDatabaseDto, its commandName is not nullable");
+
                 int index = dbDto.commandName.lastIndexOf(".");
                 if (index > 0){
                     String methodName = dbDto.commandName.substring(index+1);
@@ -192,6 +196,10 @@ public class RPCEndpointsBuilder {
                     List<Method> methods =
                         Arrays.stream(dbClazz.getDeclaredMethods()).filter(m-> m.getName().equals(methodName)).collect(Collectors.toList());
                     Method method = findMethod(methods, null);
+                    if(method == null){
+                        throw new IllegalArgumentException("cannot find specified command method:"+dbDto.commandName);
+                    }
+
                     Map<TypeVariable, Type> genericTypeMap = new HashMap<>();
                     NamedTypedValue response = build(schema, method.getReturnType(), method.getGenericReturnType(), "return", rpcType, new ArrayList<>(), 0, null, null, null, null, null, genericTypeMap, true);
                     dbDto.responseFullTypeWithGeneric = response.getType().getFullTypeNameWithGenericType();
