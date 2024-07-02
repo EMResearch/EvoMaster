@@ -1,9 +1,6 @@
 package org.evomaster.client.java.instrumentation.coverage.methodreplacement.thirdpartyclasses;
 
-import org.evomaster.client.java.instrumentation.coverage.methodreplacement.Replacement;
-import org.evomaster.client.java.instrumentation.coverage.methodreplacement.ThirdPartyCast;
-import org.evomaster.client.java.instrumentation.coverage.methodreplacement.ThirdPartyMethodReplacementClass;
-import org.evomaster.client.java.instrumentation.coverage.methodreplacement.UsageFilter;
+import org.evomaster.client.java.instrumentation.coverage.methodreplacement.*;
 import org.evomaster.client.java.instrumentation.object.ClassToSchema;
 import org.evomaster.client.java.instrumentation.object.JsonTaint;
 import org.evomaster.client.java.instrumentation.shared.ReplacementCategory;
@@ -39,14 +36,7 @@ public class JacksonObjectMapperClassReplacement extends ThirdPartyMethodReplace
         JsonTaint.handlePossibleJsonTaint(content, valueType);
     }
 
-    private static String readStream(InputStream src){
-        String content = new BufferedReader(
-                new InputStreamReader(src, Charset.defaultCharset()))
-                .lines()
-                .collect(Collectors.joining(System.lineSeparator()));
 
-        return content;
-    }
 
     /*
         TODO:
@@ -66,9 +56,9 @@ public class JacksonObjectMapperClassReplacement extends ThirdPartyMethodReplace
     public static <T> T readValue(Object caller, InputStream src, Class<T> valueType) throws Throwable {
         Objects.requireNonNull(caller);
 
-        String content = readStream(src);
+        String content = JsonUtils.readStream(src);
         analyzeClass(valueType, content);
-        src = new ByteArrayInputStream(content.getBytes());
+        src = JsonUtils.toStream(content);
 
         Method original = getOriginal(singleton, "Jackson_ObjectMapper_readValue_InputStream_Generic_class", caller);
 
@@ -92,9 +82,9 @@ public class JacksonObjectMapperClassReplacement extends ThirdPartyMethodReplace
         Objects.requireNonNull(caller);
 
         Class<?> typeClass = (Class) valueType.getClass().getMethod("getRawClass").invoke(valueType);
-        String content = readStream(src);
+        String content = JsonUtils.readStream(src);
         analyzeClass(typeClass, content);
-        src = new ByteArrayInputStream(content.getBytes());
+        src = JsonUtils.toStream(content);
 
         Method original = getOriginal(singleton, "Jackson_ObjectMapper_readValue_InputStream_JavaType_class", caller);
 
